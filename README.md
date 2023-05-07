@@ -1,4 +1,4 @@
-<h1 align="center"><img src="assets/icon32.png" width="28" height="28" /> Notix</h1>
+<h1 align="center"><img src="icons/icon48.png" width="28" height="28" /> Notix</h1>
 
 ![Preview](public/preview.png)
 
@@ -17,9 +17,6 @@ Notix is a simple extension that helps in saving temporary notes
 
 - [ ] Change UI blur effect when inactive
 - [ ] Add dark mode
-- [ ] Add search bar
-- [ ] Add more themes
-- [ ] Add more features
 
 ## Built With
 
@@ -33,7 +30,7 @@ Notix is a simple extension that helps in saving temporary notes
 * Clone the repository
 
 ```bash
-git clone https://thuongtruong1009/notix.git
+git clone https://github.com/thuongtruong1009/notix.git
 ```
 
 * Open any browser -> Settings ->  Extensions -> Click developer mode (open chrome://extensions/ for chrome)

@@ -3,27 +3,48 @@ let deleteButton = document.getElementById("delete");
 let downloadButton = document.getElementById("download");
 let copyButton = document.getElementById("copy");
 let saveButton = document.getElementById("save");
+let images = document.querySelectorAll("ul>li>img")
+
+let isEmpty = true
+
+noteInput.addEventListener("input", () => {
+  chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (noteInput.value === changes.note.newValue) {
+      isEmpty = true
+      for (let image of images) {
+        image.style.opacity = "0.6"
+      }
+    }
+    else{
+      isEmpty = false
+      for (let image of images) {
+        image.style.opacity = "1"
+      }
+    }
+  })
+});
 
 // save
 saveButton.addEventListener("click", () => {
   let note = noteInput.value;
   chrome.storage.sync.set({note: note}, () => {
-    console.log("Note saved");
+    isEmpty = false
   });
 });
 
 chrome.storage.sync.get("note", (data) => {
   if (data.note) {
     noteInput.value = data.note;
+    isEmpty = false
   }
 });
 
 // delete
 deleteButton.addEventListener("click", () => {
   chrome.storage.sync.remove("note", function() {
-    console.log("Note deleted");
+    noteInput.value = "";
+    isEmpty = true
   });
-  noteInput.value = "";
 });
 
 // download
@@ -47,7 +68,7 @@ downloadButton.addEventListener("click", () => {
 copyButton.addEventListener("click", () => {
   let note = noteInput.value;
   navigator.clipboard.writeText(note).then(() => {
-    console.log("Note copied");
+    // images[2].src = "/icons/tick.svg"
   }, () => {
     console.log("Error copying note");
   });

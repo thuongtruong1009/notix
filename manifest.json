@@ -6,17 +6,20 @@
   "author": "Tran Nguyen Thuong Truong",
   "homepage_url": "https://github.com/thuongtruong1009/notix",
   "icons": {
-    "32": "assets/icon32.png",
-    "128": "assets/icon128.png"
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "permissions": [
     "storage"
   ],
   "action": {
     "default_icon": {
-      "32": "assets/icon32.png",
-      "128": "assets/icon128.png"
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
     },
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "Notix"
   }
 }
