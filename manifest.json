@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Soccer Live Crawler",
+  "version": "1.0",
+  "description": "A Chrome extension that crawls soccer live data",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_icon": {
+      "32": "assets/logo32.png",
+      "128": "assets/logo128.png"
+    },
+    "default_popup": "popup.html"
+  }
+}
