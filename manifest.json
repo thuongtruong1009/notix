@@ -1,15 +1,21 @@
 {
   "manifest_version": 3,
-  "name": "Soccer Live Crawler",
+  "name": "Notix",
   "version": "1.0",
-  "description": "A Chrome extension that crawls soccer live data",
+  "description": "A Chrome extension that helps in saving temporary notes",
+  "author": "Tran Nguyen Thuong Truong",
+  "homepage_url": "https://github.com/thuongtruong1009/notix",
+  "icons": {
+    "32": "assets/icon32.png",
+    "128": "assets/icon128.png"
+  },
   "permissions": [
     "storage"
   ],
   "action": {
     "default_icon": {
-      "32": "assets/logo32.png",
-      "128": "assets/logo128.png"
+      "32": "assets/icon32.png",
+      "128": "assets/icon128.png"
     },
     "default_popup": "popup.html"
   }

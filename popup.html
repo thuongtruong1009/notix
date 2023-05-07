@@ -6,23 +6,26 @@
   </head>
   <body>
     <main>
-      <nav>
-        <h3>Notix</h3>
+      <header>
+        <nav>
+          <img src="/assets/icon32.png" alt="logo" width="28" height="26">
+          <h2>Notix</h2>
+        </nav>
         <ul>
-          <li>
-            <img src="/assets/delete.svg" alt="delete_icon">
+          <li id="delete" title="delete">
+            <img src="/assets/delete.svg" alt="delete_icon" title="delete">
           </li>
-          <li>
-            <img src="/assets/download.svg" alt="download_icon">
+          <li id="download" title="download">
+            <img src="/assets/download.svg" alt="download_icon" title="download">
           </li>
-          <li>
-            <img src="/assets/copy_false.svg" alt="copy_icon">
+          <li id="copy" title="coppy">
+            <img src="/assets/copy_false.svg" alt="copy_icon" title="copy">
           </li>
-          <li id="save">
-            <img src="/assets/save_false.svg" alt="save_icon">
+          <li id="save" title="save">
+            <img src="/assets/save_false.svg" alt="save_icon" title="save">
           </li>
         </ul>
-      </nav>
+      </header>
       <textarea id="note"></textarea>
     </main>
     <script src="popup.js"></script>
