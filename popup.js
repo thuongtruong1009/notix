@@ -5,8 +5,7 @@ let copyButton = document.getElementById("copy");
 let saveButton = document.getElementById("save");
 let images = document.querySelectorAll("ul>li>img")
 
-const SAVE_STATE_TRUE_IMG = "/icons/save_true.svg"
-const SAVE_STATE_FALSE_IMG = "/icons/save_false.svg"
+const SAVE_STATE_IMG = "/icons/save.svg"
 const DONE_STATE_IMG = "/icons/tick.svg"
 const COPY_STATE_IMG = "/icons/copy.svg"
 const DELETE_STATE_IMG = "/icons/delete.svg"
@@ -66,6 +65,6 @@ copyButton.addEventListener("click", () => {
 saveButton.addEventListener("click", () => {
     let note = noteInput.value;
     chrome.storage.sync.set({ note: note }, () => {
-        images[3].src = SAVE_STATE_TRUE_IMG
+        images[3].src = DONE_STATE_IMG
     });
 });
