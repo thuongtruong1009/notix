@@ -1,8 +1,14 @@
-![](https://img.shields.io/badge/w3c-validated-brightgreen)
-![](https://img.shields.io/github/languages/code-size/thuongtruong1009/notix)
-![](https://img.shields.io/github/license/thuongtruong1009/notix)
+<div align="center">
+  <img src="https://img.shields.io/badge/w3c-validated-brightgreen" alt="w3c_badge" />
+  <img src="https://img.shields.io/github/languages/code-size/thuongtruong1009/notix" alt="w3c_badge" />
+  <img src="https://img.shields.io/github/license/thuongtruong1009/notix" alt="w3c_badge" />
 
-<h1 align="center"><img src="icons/icon48.png" width="28" height="28" /> Notix</h1>
+  <img src="icons/icon48.png" width="28" height="28" /> $\LARGE\textcolor{purple}{\text{Notix}}$
+
+  <h1 align="center"><img src="icons/icon48.png" width="28" height="28" /> Notix</h1>
+
+  $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
+</div>
 
 ![Preview](public/preview.png)
 

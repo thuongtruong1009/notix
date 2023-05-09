@@ -22,7 +22,7 @@ noteInput.addEventListener("input", () => {
     images[0].src = DELETE_STATE_IMG
     images[1].src = DOWNLOAD_STATE_IMG
     images[2].src = COPY_STATE_IMG
-    images[3].src = SAVE_STATE_FALSE_IMG
+    images[3].src = SAVE_STATE_IMG
 });
 
 // delete
