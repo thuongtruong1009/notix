@@ -5,37 +5,79 @@ let copyButton = document.getElementById("copy");
 let saveButton = document.getElementById("save");
 let images = document.querySelectorAll("ul>li>img")
 
-const SAVE_STATE_IMG = "/icons/save.svg"
-const DONE_STATE_IMG = "/icons/tick.svg"
-const COPY_STATE_IMG = "/icons/copy.svg"
-const DELETE_STATE_IMG = "/icons/delete.svg"
-const DOWNLOAD_STATE_IMG = "/icons/download.svg"
+let section = document.querySelector("section")
+
+section.addEventListener("mouseenter", () => {
+    section.classList.add("active")
+});
+
+section.addEventListener("mouseleave", () => {
+    section.classList.remove("active")
+});
+
+const ICONS = {
+    SAVE_STATE: "/icons/save.svg",
+    DONE_STATE: "/icons/tick.svg",
+    COPY_STATE: "/icons/copy.svg",
+    DELETE_STATE: "/icons/delete.svg",
+    DOWNLOAD_STATE: "/icons/download.svg",
+}
+
+const KEYS = {
+    NOTE: "note",
+}
+
+const PATHS = {
+    DOWNLOAD_FILE_NAME: "notix_note_data.txt",
+}
+
+const saveData = () => {
+    let note = noteInput.value;
+    chrome.storage.sync.set({ note: note }, () => {
+        images[3].src = ICONS.DONE_STATE
+    });
+}
+
+// save
+saveButton.addEventListener("click", () => {
+    // let note = noteInput.value;
+    // chrome.storage.sync.set({ note: note }, () => {
+    //     images[3].src = ICONS.DONE_STATE
+    // });
+    saveData()
+});
 
 // load data
-chrome.storage.sync.get("note", (data) => data.note && (noteInput.value = data.note));
+chrome.storage.sync.get(KEYS.NOTE, (data) => data.note && (noteInput.value = data.note));
 
-// check data change
-noteInput.addEventListener("input", () => {
+// check data
+noteInput.addEventListener('input', () => {
     for (let image of images) {
         image.style.opacity = "1"
     }
-    images[0].src = DELETE_STATE_IMG
-    images[1].src = DOWNLOAD_STATE_IMG
-    images[2].src = COPY_STATE_IMG
-    images[3].src = SAVE_STATE_IMG
+    images[0].src = ICONS.DELETE_STATE
+    images[1].src = ICONS.DOWNLOAD_STATE
+    images[2].src = ICONS.COPY_STATE
+    images[3].src = ICONS.SAVE_STATE
+    setTimeout(() => {
+        saveData()
+        for (let image of images) {
+            image.style.opacity = "0.5"
+        }
+    }, 1000)
 });
 
 // delete
 deleteButton.addEventListener("click", () => {
-    chrome.storage.sync.remove("note", function() {
+    chrome.storage.sync.remove(KEYS.NOTE, function() {
         noteInput.value = "";
-        images[0].src = DONE_STATE_IMG
+        images[0].src = ICONS.DONE_STATE
     });
 });
 
 // download
 downloadButton.addEventListener("click", () => {
-    var filename = "notix_extension_data.txt";
+    var filename = PATHS.DOWNLOAD_FILE_NAME;
     let note = noteInput.value;
 
     var element = document.createElement("a");
@@ -48,23 +90,15 @@ downloadButton.addEventListener("click", () => {
     element.click();
 
     document.body.removeChild(element);
-    images[1].src = DONE_STATE_IMG
+    images[1].src = ICONS.DONE_STATE
 }, false);
 
 // copy
 copyButton.addEventListener("click", () => {
     let note = noteInput.value;
     navigator.clipboard.writeText(note).then(() => {
-        images[2].src = DONE_STATE_IMG
+        images[2].src = ICONS.DONE_STATE
     }, () => {
         console.log("Error copying note");
-    });
-});
-
-// save
-saveButton.addEventListener("click", () => {
-    let note = noteInput.value;
-    chrome.storage.sync.set({ note: note }, () => {
-        images[3].src = DONE_STATE_IMG
     });
 });
