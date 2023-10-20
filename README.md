@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/github/languages/code-size/thuongtruong1009/notix" alt="w3c_badge" />
   <img src="https://img.shields.io/github/license/thuongtruong1009/notix" alt="w3c_badge" />
 
-<img src="./icons/icon48.png" width="28" height="28" /> $\huge\textcolor{purple}{\text{Notix}}$
+<img src="./public/favicon.ico" width="28" height="28" /> $\huge\textcolor{purple}{\text{Notix}}$
 
 $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 
@@ -17,22 +17,19 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 
 ## 🎉 Features
 
-##### (not support in <ins>http://localhost</ins>)
+##### (Not support in <ins>http://localhost</ins> static living)
 
 -   Create, edit, delete and save notes
 -   Copy notes to clipboard
 -   Download notes as .txt files
 -   Auto save typed notes
--   Cross-browser
+-   Cross-browsers
 -   UI/UX friendly (transition button list, shadow effect, gradient title etc.)
 
 ## 🎯 Todo
 
--   [ ] Export as image
 -   [ ] Setting options (font color, font size, popup size, etc.)
 -   [ ] Add dark mode
--   [ ] Add search bar
--   [ ] Update UI & add more features
 
 ## 🧩 Built With
 
@@ -60,4 +57,4 @@ Copyright of [@thuongtruong1009](https://github.com/thuongtruong1009), 2023
 
 ## ❤️ Support me
 
-> <a href="https://nhantien.momo.vn/0917085937"><img height="28"  src="public/momo.svg"></a> > <a href="https://www.paypal.me/thuongtruong1009"><img height="32"  src="public/paypal.svg"></a> > <a href='https://ko-fi.com/thuongtruong1009'><img height='26' style='border:0px;height:28px;color:blue' src='public/kofi.svg' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> > <a href="public/mb_qr.jpg"><img height="30" src="public/mbbank.svg"></a>
+> <a href="https://nhantien.momo.vn/0917085937"><img height="28" src="./public/momo.svg"></a> <a href="https://www.paypal.me/thuongtruong1009"><img height="32" src="./public/paypal.svg"></a> <a href='https://ko-fi.com/thuongtruong1009'><img height='26' style='border:0px;height:28px;color:blue' src='./public/kofi.svg' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> <a href="public/mb_qr.jpg"><img height="30" src="./public/mbbank.svg"></a>
