@@ -72,7 +72,7 @@ header > nav {
 }
 
 header > nav > h2 {
-    margin-left: 0.5rem;
+    margin-left: 0.2rem;
     background: -webkit-linear-gradient(30deg, #130ac1, #00c472 80%);
     background-clip: text;
     -webkit-background-clip: text;
@@ -83,29 +83,33 @@ main > section {
     width: 100%;
     height: 100%;
     resize: none;
-    font-weight: 500;
-    border-radius: 0.7rem;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+main > #note_panel {
+    font-weight: 500;
+    border-radius: 0.7rem;
     box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9,
         9px 9px 16px rgba(189, 189, 189, 0.6),
         -9px -9px 16px rgba(255, 255, 255, 0.5);
 }
 
-main > section.active {
+main > #note_panel.active {
     box-shadow: inset 4px 4px 4px #d1d9e6, inset -4px -4px 4px #f9f9f9,
         9px 9px 16px rgba(189, 189, 189, 0.6),
         -9px -9px 16px rgba(255, 255, 255, 0.5);
 }
 
-main > section > div {
-    border: 0.25rem solid transparent;
+main > #note_panel > div {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    border: 0.25rem solid transparent;
 }
 
-main > section > div > textarea {
+main > #note_panel > div > textarea,
+main > #list_panel > ul {
     width: 100%;
     height: 100%;
     padding: 0.5rem;
@@ -113,12 +117,30 @@ main > section > div > textarea {
     background: transparent;
 }
 
-ul {
+main > #list_panel > ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 0.5rem;
+    padding: 0;
+}
+
+main > #list_panel > ul > li {
+    border: 1px solid purple;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    list-style: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    height: fit-content;
+}
+
+header ul {
     list-style: none;
     display: flex;
 }
 
-ul > li {
+header #note_header > li {
     border-radius: 0.5rem;
     cursor: pointer;
     font-size: 14px;
@@ -127,12 +149,17 @@ ul > li {
     box-shadow: 0px -6px 10px white, 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-ul > li:hover {
+header #note_header > li:hover {
     box-shadow: inset 0px -6px 10px white,
         inset 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-ul > li > img {
+header #note_header #home {
+    margin-right: 2rem;
+}
+
+header ul > li > img,
+header button > img {
     width: 1rem;
     height: 1rem;
     z-index: -1;

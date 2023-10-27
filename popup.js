@@ -4,7 +4,10 @@ let downloadButton = document.getElementById("download");
 let copyButton = document.getElementById("copy");
 let saveButton = document.getElementById("save");
 let images = document.querySelectorAll("ul>li>img")
-let section = document.querySelector("section")
+let section = document.querySelector("#note_panel")
+
+let noteHeader = document.querySelector("#note_header")
+let listHeader = document.querySelector("#list_header")
 
 const ICONS = {
     SAVE_STATE: "/icons/save.svg",
@@ -14,12 +17,23 @@ const ICONS = {
     DOWNLOAD_STATE: "/icons/download.svg",
 }
 
-const NOTE = {
-    KEY: "note",
+const OBJS = {
+    NOTE: "note",
+    LIST: "list",
+    TAB: "tab",
     DOWNLOAD_FILE_NAME: "notix_note_data.txt",
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+let currentTab = OBJS.NOTE;
+chrome.storage.sync.get(OBJS.TAB, (data) => {
+    if (data.tab == OBJS.NOTE) {
+        listHeader.style.display = "flex"
+        noteHeader.style.display = "none"
+        currentTab = OBJS.LIST
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
     noteInput.scrollTop = noteInput.scrollHeight;
 });
 
@@ -42,7 +56,7 @@ saveButton.addEventListener("click", () => {
     saveData()
 });
 
-chrome.storage.sync.get(NOTE.KEY, (data) => data.note && (noteInput.value = data.note));
+chrome.storage.sync.get(OBJS.NOTE, (data) => data.note && (noteInput.value = data.note));
 
 noteInput.addEventListener('input', () => {
     for (let image of images) {
@@ -58,14 +72,14 @@ noteInput.addEventListener('input', () => {
 });
 
 deleteButton.addEventListener("click", () => {
-    chrome.storage.sync.remove(NOTE.KEY, function() {
+    chrome.storage.sync.remove(OBJS.NOTE, function() {
         noteInput.value = "";
         images[0].src = ICONS.DONE_STATE
     });
 });
 
 downloadButton.addEventListener("click", () => {
-    var filename = NOTE.DOWNLOAD_FILE_NAME;
+    var filename = OBJS.DOWNLOAD_FILE_NAME;
     let note = noteInput.value;
 
     var element = document.createElement("a");
@@ -89,3 +103,13 @@ copyButton.addEventListener("click", () => {
         alert("Error copying note");
     });
 });
+
+
+let list = document.querySelector('#list_panel > ul');
+let newBtn = document.querySelector('#list_header > #new_btn');
+
+newBtn.addEventListener('click', () => {
+    let newItem = document.createElement('li');
+    newItem.innerHTML = '<p>hello</p>';
+    list.appendChild(newItem);
+})
