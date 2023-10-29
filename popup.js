@@ -22,16 +22,25 @@ const OBJS = {
     LIST: "list",
     TAB: "tab",
     DOWNLOAD_FILE_NAME: "notix_note_data.txt",
+    ITEMS: "items",
 }
 
 let currentTab = OBJS.NOTE;
-chrome.storage.sync.get(OBJS.TAB, (data) => {
-    if (data.tab == OBJS.NOTE) {
+
+const changeTab = () => {
+    if (currentTab == OBJS.NOTE) {
         listHeader.style.display = "flex"
         noteHeader.style.display = "none"
         currentTab = OBJS.LIST
+    } else {
+        listHeader.style.display = "none"
+        noteHeader.style.display = "flex"
+        currentTab = OBJS.NOTE
     }
-});
+    chrome.storage.sync.set({ tab: currentTab });
+}
+
+chrome.storage.sync.get(OBJS.TAB, changeTab);
 
 document.addEventListener('DOMContentLoaded', () => {
     noteInput.scrollTop = noteInput.scrollHeight;
@@ -108,8 +117,30 @@ copyButton.addEventListener("click", () => {
 let list = document.querySelector('#list_panel > ul');
 let newBtn = document.querySelector('#list_header > #new_btn');
 
+let items = [];
+
+const persistItems = () => {
+    for (let item of list.children) {
+        items.push(item.innerHTML);
+    }
+    chrome.storage.sync.set({ items: items });
+}
+
+chrome.storage.sync.get(OBJS.ITEMS, (data)=> {
+    if (data.items) {
+        for (let item of data.items) {
+            let newItem = document.createElement('li');
+            newItem.innerHTML = item;
+            list.appendChild(newItem);
+        }
+    }
+
+});
+
 newBtn.addEventListener('click', () => {
     let newItem = document.createElement('li');
+    newItem.setAttribute('id', 'new_item')
     newItem.innerHTML = '<p>hello</p>';
     list.appendChild(newItem);
+    persistItems();
 })

@@ -137,10 +137,11 @@ main > #list_panel > ul > li {
 
 header ul {
     list-style: none;
-    display: flex;
+    /* display: flex; */
 }
 
-header #note_header > li {
+header #note_header > li,
+header #list_header > #new_btn {
     border-radius: 0.5rem;
     cursor: pointer;
     font-size: 14px;
@@ -149,7 +150,8 @@ header #note_header > li {
     box-shadow: 0px -6px 10px white, 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-header #note_header > li:hover {
+header #note_header > li:hover,
+header #list_header > #new_btn:hover {
     box-shadow: inset 0px -6px 10px white,
         inset 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
