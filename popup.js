@@ -4,10 +4,18 @@ let downloadButton = document.getElementById("download");
 let copyButton = document.getElementById("copy");
 let saveButton = document.getElementById("save");
 let images = document.querySelectorAll("ul>li>img")
-let section = document.querySelector("#note_panel")
+
+let notePanel = document.querySelector("#note_panel")
+let listPanel = document.querySelector("#list_panel")
 
 let noteHeader = document.querySelector("#note_header")
 let listHeader = document.querySelector("#list_header")
+
+let homeBtn = document.querySelector('#note_header #home');
+
+let list = document.querySelector('#list_panel > ul');
+let newBtn = document.querySelector('#list_header > #new_btn');
+let listItem = document.querySelector('#list_panel > ul > li');
 
 const ICONS = {
     SAVE_STATE: "/icons/save.svg",
@@ -23,41 +31,130 @@ const OBJS = {
     TAB: "tab",
     DOWNLOAD_FILE_NAME: "notix_note_data.txt",
     ITEMS: "items",
+    CURRENT_DATA: "current_data"
 }
 
-let currentTab = OBJS.NOTE;
+const tabListStyle = () => {
+    listHeader.style.display = "flex"
+    noteHeader.style.display = "none"
+    notePanel.style.display = "none"
+    listPanel.style.display = "flex"
+}
 
-const changeTab = () => {
-    if (currentTab == OBJS.NOTE) {
-        listHeader.style.display = "flex"
-        noteHeader.style.display = "none"
-        currentTab = OBJS.LIST
-    } else {
-        listHeader.style.display = "none"
-        noteHeader.style.display = "flex"
-        currentTab = OBJS.NOTE
+const tabNoteStyle = () => {
+    listHeader.style.display = "none"
+    noteHeader.style.display = "flex"
+    notePanel.style.display = "flex"
+    listPanel.style.display = "none"
+}
+
+const persistCurrentTabStyle = (tab) => {
+    tab === OBJS.NOTE ? tabNoteStyle() : tabListStyle()
+}
+
+const changeTab = (tab) => {
+    persistCurrentTabStyle(tab)
+    chrome.storage.sync.set({ tab: tab });
+}
+
+chrome.storage.sync.get(OBJS.TAB, (data) => persistCurrentTabStyle(data.tab));
+
+let currentData = {
+    id: "",
+    title: "",
+    content: ""
+};
+
+// **************** list tab ****************
+
+let currentItems = [];
+
+chrome.storage.sync.get(OBJS.ITEMS, (data)=> {
+    if (data.items) {
+        for (let item of data.items) {
+            let newItem = document.createElement('li');
+            newItem.innerHTML = item.title;
+            newItem.setAttribute('id', item.id);
+            list.appendChild(newItem);
+        }
+        currentItems = data.items;
     }
-    chrome.storage.sync.set({ tab: currentTab });
-}
+});
 
-chrome.storage.sync.get(OBJS.TAB, changeTab);
+const dispatchItems = () => chrome.storage.sync.set({ items: currentItems });
 
-document.addEventListener('DOMContentLoaded', () => {
+newBtn.addEventListener('click', () => {
+    let newData = {
+        id: Date.now(),
+        title: Date.now(),
+        content: ""
+    }
+    let newItem = document.createElement('li');
+    newItem.setAttribute('id', newData.id);
+    newItem.innerHTML = `<p>${newData.title}</p>`;
+    list.appendChild(newItem);
+
+    currentItems.push(newData);
+    dispatchItems();
+});
+
+list.addEventListener('click', (event) => {
+    if (event.target.tagName === 'LI' || event.target.tagName === 'P') {
+        let choice = currentItems.find(item => item.id === event.target.id);
+
+        chrome.storage.sync.set({ current_data: choice});
+        changeTab(OBJS.NOTE);
+    }
+})
+
+// const removeOutOfItems = (itemId) => {
+//     items.splice(items.indexOf(itemId), 1);
+//     chrome.storage.sync.set({ items: items });
+// }
+
+// **************** note tab ****************
+
+notePanel.addEventListener('DOMContentLoaded', () => {
     noteInput.scrollTop = noteInput.scrollHeight;
 });
 
-section.addEventListener("mouseenter", () => {
-    section.classList.add("active");
+notePanel.addEventListener("mouseenter", () => {
+    notePanel.classList.add("active");
 });
 
-section.addEventListener("mouseleave", () => {
-    section.classList.remove("active");
+notePanel.addEventListener("mouseleave", () => {
+    notePanel.classList.remove("active");
+});
+
+homeBtn.addEventListener("click", () => {
+    changeTab(OBJS.LIST);
+});
+
+chrome.storage.sync.get(OBJS.CURRENT_DATA, (data) => {
+    if(data.current_data) {
+        noteInput.value = data.current_data.content
+        currentData = data.current_data
+    }
 });
 
 const saveData = () => {
-    let note = noteInput.value;
-    chrome.storage.sync.set({ note: note }, () => {
-        images[3].src = ICONS.DONE_STATE
+    // let newData = {
+    //     id: currentData.id,
+    //     title: currentData.title,
+    //     content: noteInput.value
+    // };
+    currentData.content = noteInput.value
+
+    chrome.storage.sync.set({ current_data: currentData}, () => {
+        images[4].src = ICONS.DONE_STATE;
+
+        currentItems.map((item, index) => {
+            if (item.id === currentData.id) {
+                currentItems[index] = currentData;
+            }
+        });
+
+        dispatchItems();
     });
 }
 
@@ -65,26 +162,25 @@ saveButton.addEventListener("click", () => {
     saveData()
 });
 
-chrome.storage.sync.get(OBJS.NOTE, (data) => data.note && (noteInput.value = data.note));
-
 noteInput.addEventListener('input', () => {
     for (let image of images) {
         image.style.opacity = "1"
     }
-    images[0].src = ICONS.DELETE_STATE
-    images[1].src = ICONS.DOWNLOAD_STATE
-    images[2].src = ICONS.COPY_STATE
-    images[3].src = ICONS.SAVE_STATE
+    images[1].src = ICONS.DELETE_STATE
+    images[2].src = ICONS.DOWNLOAD_STATE
+    images[3].src = ICONS.COPY_STATE
+    images[4].src = ICONS.SAVE_STATE
     setTimeout(() => {
         saveData()
     }, 1000)
 });
 
 deleteButton.addEventListener("click", () => {
-    chrome.storage.sync.remove(OBJS.NOTE, function() {
+    chrome.storage.sync.remove(OBJS.CURRENT_DATA, function() {
         noteInput.value = "";
-        images[0].src = ICONS.DONE_STATE
+        images[1].src = ICONS.DONE_STATE
     });
+    // removeOutOfItems(currentData.id);
 });
 
 downloadButton.addEventListener("click", () => {
@@ -101,46 +197,14 @@ downloadButton.addEventListener("click", () => {
     element.click();
 
     document.body.removeChild(element);
-    images[1].src = ICONS.DONE_STATE
+    images[2].src = ICONS.DONE_STATE
 }, false);
 
 copyButton.addEventListener("click", () => {
     let note = noteInput.value;
     navigator.clipboard.writeText(note).then(() => {
-        images[2].src = ICONS.DONE_STATE
+        images[3].src = ICONS.DONE_STATE
     }, () => {
         alert("Error copying note");
     });
 });
-
-
-let list = document.querySelector('#list_panel > ul');
-let newBtn = document.querySelector('#list_header > #new_btn');
-
-let items = [];
-
-const persistItems = () => {
-    for (let item of list.children) {
-        items.push(item.innerHTML);
-    }
-    chrome.storage.sync.set({ items: items });
-}
-
-chrome.storage.sync.get(OBJS.ITEMS, (data)=> {
-    if (data.items) {
-        for (let item of data.items) {
-            let newItem = document.createElement('li');
-            newItem.innerHTML = item;
-            list.appendChild(newItem);
-        }
-    }
-
-});
-
-newBtn.addEventListener('click', () => {
-    let newItem = document.createElement('li');
-    newItem.setAttribute('id', 'new_item')
-    newItem.innerHTML = '<p>hello</p>';
-    list.appendChild(newItem);
-    persistItems();
-})
