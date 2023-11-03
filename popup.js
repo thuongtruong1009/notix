@@ -1,19 +1,24 @@
-let noteInput = document.getElementById("note");
-let deleteButton = document.getElementById("delete");
-let downloadButton = document.getElementById("download");
-let copyButton = document.getElementById("copy");
-let saveButton = document.getElementById("save");
-let images = document.querySelectorAll("ul>li>img")
-
-let notePanel = document.querySelector("#note_panel")
-let listPanel = document.querySelector("#list_panel")
+let logo = document.getElementById("logo");
+let homeBtn = document.querySelector('#home');
 
 let noteHeader = document.querySelector("#note_header")
 let listHeader = document.querySelector("#list_header")
 
-let homeBtn = document.querySelector('#note_header #home');
+let noteName = document.querySelector("#note_name")
+let total = document.querySelector("#total")
+
+let notePanel = document.querySelector("#note_panel")
+let listPanel = document.querySelector("#list_panel")
+
+let noteInput = document.getElementById("note");
+let resetBtn = document.getElementById("reset");
+let downloadBtn = document.getElementById("download");
+let copyBtn = document.getElementById("copy");
+let saveBtn = document.getElementById("save");
+let images = document.querySelectorAll("ul>li>img")
 
 let list = document.querySelector('#list_panel > ul');
+let deleteBtn = document.querySelector('#list_header > #delete_btn');
 let newBtn = document.querySelector('#list_header > #new_btn');
 let listItem = document.querySelector('#list_panel > ul > li');
 
@@ -21,8 +26,8 @@ const ICONS = {
     SAVE_STATE: "/icons/save.svg",
     DONE_STATE: "/icons/tick.svg",
     COPY_STATE: "/icons/copy.svg",
-    DELETE_STATE: "/icons/delete.svg",
-    DOWNLOAD_STATE: "/icons/download.svg",
+    RESET_STATE: "/icons/reset.png",
+    DOWNLOAD_STATE: "/icons/download.png",
 }
 
 const OBJS = {
@@ -39,6 +44,9 @@ const tabListStyle = () => {
     noteHeader.style.display = "none";
     notePanel.style.display = "none";
     listPanel.style.display = "flex";
+    logo.style.display = "flex";
+    homeBtn.style.display = "none";
+    noteName.style.display = "none";
 }
 
 const tabNoteStyle = () => {
@@ -46,6 +54,9 @@ const tabNoteStyle = () => {
     noteHeader.style.display = "flex";
     notePanel.style.display = "flex";
     listPanel.style.display = "none";
+    logo.style.display = "none";
+    homeBtn.style.display = "block";
+    noteName.style.display = "inline-flex";
 }
 
 const persistCurrentTabStyle = (tab) => {
@@ -68,7 +79,15 @@ const generateEle = (id, title) => {
     newItem.innerHTML = `<p>${title}</p>`;
     newItem.setAttribute('id', id);
 
-    newItem.addEventListener('click', async () => {
+    let checkboxItem = document.createElement('input');
+    checkboxItem.setAttribute('type', 'checkbox');
+    checkboxItem.setAttribute('id', 'checkbox_item');
+    newItem.appendChild(checkboxItem);
+
+    newItem.addEventListener('click', async (e) => {
+        if (e.target == checkboxItem) {
+            return;
+        }
         let choice = await currentItems.find(item => item.id === id);
         chrome.storage.sync.set({ current_data: choice});
         changeTab(OBJS.NOTE);
@@ -84,10 +103,20 @@ chrome.storage.sync.get(OBJS.ITEMS, (data)=> {
             list.appendChild(generateEle(item.id, item.title));
         }
         currentItems = data.items;
+        total.innerText = currentItems.length;
     }
 });
 
 const dispatchItems = () => chrome.storage.sync.set({ items: currentItems });
+
+deleteBtn.addEventListener('click', () => {
+    let selectedItems = document.querySelectorAll('li.selected');
+    for (let item of selectedItems) {
+        list.removeChild(item);
+        currentItems = currentItems.filter((currentItem) => currentItem.id !== item.id);
+    }
+    dispatchItems();
+});
 
 newBtn.addEventListener('click', () => {
     let newData = {
@@ -102,9 +131,9 @@ newBtn.addEventListener('click', () => {
     list.appendChild(generateEle(newData.id, newData.title));
 });
 
-// const removeOutOfItems = (itemId) => {
-//     items.splice(items.indexOf(itemId), 1);
-//     chrome.storage.sync.set({ items: items });
+// const removeNoteOutOfItems = (itemId) => {
+//     currentItems.splice(currentItems.indexOf(itemId), 1);
+//     chrome.storage.sync.set({ items: currentItems });
 // }
 
 // **************** note tab ****************
@@ -136,27 +165,32 @@ const loadNoteData = () => {
         if(data.current_data) {
             noteInput.value = data.current_data.content;
             currentData = data.current_data;
+            noteName.innerText = data.current_data.title;
         }
     });
+}
+
+const updateNoteDataById = () => {
+    currentItems.map((item, index) => {
+        if (item.id === currentData.id) {
+            currentItems[index] = currentData;
+        }
+    });
+
+    dispatchItems();
 }
 
 const saveData = () => {
     currentData.content = noteInput.value;
 
     chrome.storage.sync.set({ current_data: currentData}, () => {
-        images[4].src = ICONS.DONE_STATE;
+        images[3].src = ICONS.DONE_STATE;
     });
 
-    currentItems.map((item, index) => {
-        if (item.id === currentData.id) {
-            currentItems[index] = currentData;
-        }
-    });
-    
-    dispatchItems();
+    updateNoteDataById();
 }
 
-saveButton.addEventListener("click", () => {
+saveBtn.addEventListener("click", () => {
     saveData();
 });
 
@@ -164,23 +198,25 @@ noteInput.addEventListener('input', () => {
     for (let image of images) {
         image.style.opacity = "1";
     }
-    images[1].src = ICONS.DELETE_STATE;
-    images[2].src = ICONS.DOWNLOAD_STATE;
-    images[3].src = ICONS.COPY_STATE;
-    images[4].src = ICONS.SAVE_STATE;
+    images[0].src = ICONS.RESET_STATE;
+    images[1].src = ICONS.DOWNLOAD_STATE;
+    images[2].src = ICONS.COPY_STATE;
+    images[3].src = ICONS.SAVE_STATE;
     setTimeout(() => {
         saveData();
     }, 1000)
 });
 
-deleteButton.addEventListener("click", () => {
+resetBtn.addEventListener("click", () => {
     chrome.storage.sync.remove(OBJS.CURRENT_DATA, () => {
         noteInput.value = "";
-        images[1].src = ICONS.DONE_STATE;
+        currentData.content = "";
+        updateNoteDataById();
+        images[0].src = ICONS.DONE_STATE;
     });
 });
 
-downloadButton.addEventListener("click", () => {
+downloadBtn.addEventListener("click", () => {
     var filename = OBJS.DOWNLOAD_FILE_NAME;
     let note = noteInput.value;
 
@@ -194,13 +230,13 @@ downloadButton.addEventListener("click", () => {
     element.click();
 
     document.body.removeChild(element);
-    images[2].src = ICONS.DONE_STATE;
+    images[1].src = ICONS.DONE_STATE;
 }, false);
 
-copyButton.addEventListener("click", () => {
+copyBtn.addEventListener("click", () => {
     let note = noteInput.value;
     navigator.clipboard.writeText(note).then(() => {
-        images[3].src = ICONS.DONE_STATE;
+        images[2].src = ICONS.DONE_STATE;
     }, () => {
         alert("Error copying note");
     });

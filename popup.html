@@ -16,19 +16,31 @@
 <body>
     <main>
         <header>
-            <nav>
+            <nav id="logo">
                 <img src="/icons/icon32.png" alt="logo" width="24" height="24">
                 <h2>Notix</h2>
             </nav>
-            <ul id="note_header">
-                <li id="home" title="home">
-                    <img src="/icons/home.svg" alt="home_icon" title="home">
-                </li>
-                <li id="delete" title="delete">
+            <div id="home">
+                <img src="/icons/home.svg" alt="home_icon" title="home">
+            </div>
+            <div id="list_header">
+                <h3>Total:<span id="total">0</span></h3>
+                <button class="inactive" id="delete_btn" type="button">
                     <img src="/icons/delete.svg" alt="delete_icon" title="delete">
+                    <h5>Delete</h5>
+                </button>
+                <button id="new_btn" type="button">
+                    <img src="/icons/new.png" alt="new_icon" title="new">
+                    <h5>New</h5>
+                </button>
+            </div>
+            <p id="note_name"></p>
+            <ul id="note_header">
+                <li id="reset" title="reset">
+                    <img src="/icons/reset.png" alt="reset_icon" title="reset">
                 </li>
                 <li id="download" title="download">
-                    <img src="/icons/download.svg" alt="download_icon" title="download">
+                    <img src="/icons/download.png" alt="download_icon" title="download">
                 </li>
                 <li id="copy" title="copy">
                     <img src="/icons/copy.svg" alt="copy_icon" title="copy">
@@ -37,12 +49,6 @@
                     <img src="/icons/save.svg" alt="save_icon" title="save">
                 </li>
             </ul>
-            <div id="list_header">
-                <button id="new_btn" type="button">
-                    <img src="/icons/new.svg" alt="new_icon" title="new">
-                    <span>New</span>
-                </button>
-            </div>
         </header>
         <section id="list_panel">
             <ul></ul>
