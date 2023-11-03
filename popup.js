@@ -35,47 +35,53 @@ const OBJS = {
 }
 
 const tabListStyle = () => {
-    listHeader.style.display = "flex"
-    noteHeader.style.display = "none"
-    notePanel.style.display = "none"
-    listPanel.style.display = "flex"
+    listHeader.style.display = "flex";
+    noteHeader.style.display = "none";
+    notePanel.style.display = "none";
+    listPanel.style.display = "flex";
 }
 
 const tabNoteStyle = () => {
-    listHeader.style.display = "none"
-    noteHeader.style.display = "flex"
-    notePanel.style.display = "flex"
-    listPanel.style.display = "none"
+    listHeader.style.display = "none";
+    noteHeader.style.display = "flex";
+    notePanel.style.display = "flex";
+    listPanel.style.display = "none";
 }
 
 const persistCurrentTabStyle = (tab) => {
-    tab === OBJS.NOTE ? tabNoteStyle() : tabListStyle()
+    tab === OBJS.NOTE ? tabNoteStyle() : tabListStyle();
 }
 
 const changeTab = (tab) => {
-    persistCurrentTabStyle(tab)
+    persistCurrentTabStyle(tab);
     chrome.storage.sync.set({ tab: tab });
 }
 
 chrome.storage.sync.get(OBJS.TAB, (data) => persistCurrentTabStyle(data.tab));
 
-let currentData = {
-    id: "",
-    title: "",
-    content: ""
-};
-
 // **************** list tab ****************
 
 let currentItems = [];
 
+const generateEle = (id, title) => {
+    let newItem = document.createElement('li');
+    newItem.innerHTML = `<p>${title}</p>`;
+    newItem.setAttribute('id', id);
+
+    newItem.addEventListener('click', async () => {
+        let choice = await currentItems.find(item => item.id === id);
+        chrome.storage.sync.set({ current_data: choice});
+        changeTab(OBJS.NOTE);
+        loadNoteData();
+    });
+
+    return newItem;
+}
+
 chrome.storage.sync.get(OBJS.ITEMS, (data)=> {
     if (data.items) {
         for (let item of data.items) {
-            let newItem = document.createElement('li');
-            newItem.innerHTML = item.title;
-            newItem.setAttribute('id', item.id);
-            list.appendChild(newItem);
+            list.appendChild(generateEle(item.id, item.title));
         }
         currentItems = data.items;
     }
@@ -89,23 +95,12 @@ newBtn.addEventListener('click', () => {
         title: Date.now(),
         content: ""
     }
-    let newItem = document.createElement('li');
-    newItem.setAttribute('id', newData.id);
-    newItem.innerHTML = `<p>${newData.title}</p>`;
-    list.appendChild(newItem);
-
+    
     currentItems.push(newData);
     dispatchItems();
+
+    list.appendChild(generateEle(newData.id, newData.title));
 });
-
-list.addEventListener('click', (event) => {
-    if (event.target.tagName === 'LI' || event.target.tagName === 'P') {
-        let choice = currentItems.find(item => item.id === event.target.id);
-
-        chrome.storage.sync.set({ current_data: choice});
-        changeTab(OBJS.NOTE);
-    }
-})
 
 // const removeOutOfItems = (itemId) => {
 //     items.splice(items.indexOf(itemId), 1);
@@ -130,57 +125,59 @@ homeBtn.addEventListener("click", () => {
     changeTab(OBJS.LIST);
 });
 
-chrome.storage.sync.get(OBJS.CURRENT_DATA, (data) => {
-    if(data.current_data) {
-        noteInput.value = data.current_data.content
-        currentData = data.current_data
-    }
-});
+let currentData = {
+    id: "",
+    title: "",
+    content: ""
+};
 
-const saveData = () => {
-    // let newData = {
-    //     id: currentData.id,
-    //     title: currentData.title,
-    //     content: noteInput.value
-    // };
-    currentData.content = noteInput.value
-
-    chrome.storage.sync.set({ current_data: currentData}, () => {
-        images[4].src = ICONS.DONE_STATE;
-
-        currentItems.map((item, index) => {
-            if (item.id === currentData.id) {
-                currentItems[index] = currentData;
-            }
-        });
-
-        dispatchItems();
+const loadNoteData = () => {
+    chrome.storage.sync.get(OBJS.CURRENT_DATA, (data) => {
+        if(data.current_data) {
+            noteInput.value = data.current_data.content;
+            currentData = data.current_data;
+        }
     });
 }
 
+const saveData = () => {
+    currentData.content = noteInput.value;
+
+    chrome.storage.sync.set({ current_data: currentData}, () => {
+        images[4].src = ICONS.DONE_STATE;
+    });
+
+    currentItems.map((item, index) => {
+        if (item.id === currentData.id) {
+            currentItems[index] = currentData;
+        }
+    });
+    
+    dispatchItems();
+}
+
 saveButton.addEventListener("click", () => {
-    saveData()
+    saveData();
 });
 
 noteInput.addEventListener('input', () => {
     for (let image of images) {
-        image.style.opacity = "1"
+        image.style.opacity = "1";
     }
-    images[1].src = ICONS.DELETE_STATE
-    images[2].src = ICONS.DOWNLOAD_STATE
-    images[3].src = ICONS.COPY_STATE
-    images[4].src = ICONS.SAVE_STATE
+    images[1].src = ICONS.DELETE_STATE;
+    images[2].src = ICONS.DOWNLOAD_STATE;
+    images[3].src = ICONS.COPY_STATE;
+    images[4].src = ICONS.SAVE_STATE;
     setTimeout(() => {
-        saveData()
+        saveData();
     }, 1000)
 });
 
 deleteButton.addEventListener("click", () => {
-    chrome.storage.sync.remove(OBJS.CURRENT_DATA, function() {
+    chrome.storage.sync.remove(OBJS.CURRENT_DATA, () => {
         noteInput.value = "";
-        images[1].src = ICONS.DONE_STATE
+        images[1].src = ICONS.DONE_STATE;
     });
-    // removeOutOfItems(currentData.id);
 });
 
 downloadButton.addEventListener("click", () => {
@@ -197,13 +194,13 @@ downloadButton.addEventListener("click", () => {
     element.click();
 
     document.body.removeChild(element);
-    images[2].src = ICONS.DONE_STATE
+    images[2].src = ICONS.DONE_STATE;
 }, false);
 
 copyButton.addEventListener("click", () => {
     let note = noteInput.value;
     navigator.clipboard.writeText(note).then(() => {
-        images[3].src = ICONS.DONE_STATE
+        images[3].src = ICONS.DONE_STATE;
     }, () => {
         alert("Error copying note");
     });
