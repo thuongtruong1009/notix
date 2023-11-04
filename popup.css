@@ -63,8 +63,13 @@ header {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: 1rem;
     user-select: none;
+}
+
+header .disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 header > nav,
@@ -105,12 +110,6 @@ header #list_header > button:hover {
         inset 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-header #list_header > .inactive {
-    pointer-events: none;
-    cursor: not-allowed;
-    opacity: 0.5;
-}
-
 header #note_header > li,
 header #list_header > button {
     margin-left: 0.75rem;
@@ -137,6 +136,7 @@ main > section {
 }
 
 main > #note_panel {
+    margin-top: 1rem;
     font-weight: 500;
     border-radius: 0.7rem;
     box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9,
@@ -169,28 +169,93 @@ main > #list_panel > ul {
 main > #list_panel > ul {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 0.5rem;
-    padding: 0.25rem;
+    grid-gap: 0.65rem;
+    padding: 1rem 0.5rem 0 0.5rem;
     height: fit-content !important;
 }
 
 main > #list_panel > ul > li {
-    border-radius: 0.25rem;
-    background: #ddd;
-    padding: 0.5rem;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
     height: fit-content;
     position: relative;
 }
 
-main > #list_panel > ul > li #checkbox_item {
+/* item buttons */
+
+main > #list_panel > ul > li button {
+    text-align: left;
+    border-radius: 0.25rem;
+    border: 1px solid #e8e8e8;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    z-index: 1;
+    color: #090909;
+    font-size: 1.1em;
+    background: #e8e8e8;
+    box-shadow: 2px 2px 5px #c5c5c5, -2px -2px 5px #ffffff;
+}
+
+main > #list_panel > ul > li button:before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) scaleY(1) scaleX(1.25);
+    top: 100%;
+    width: 140%;
+    height: 180%;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    display: block;
+    transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+    z-index: -1;
+}
+
+main > #list_panel > ul > li button:after {
+    content: '';
+    position: absolute;
+    left: 55%;
+    transform: translateX(-50%) scaleY(1) scaleX(1.45);
+    top: 180%;
+    width: 160%;
+    height: 190%;
+    background-color: #009087;
+    border-radius: 50%;
+    display: block;
+    transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+    z-index: -1;
+}
+
+main > #list_panel > ul > li button:hover {
+    color: #ffffff;
+    border: 1px solid #009087;
+}
+
+main > #list_panel > ul > li button:hover:before {
+    top: -35%;
+    background-color: #009087;
+    transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+main > #list_panel > ul > li button:hover:after {
+    top: -45%;
+    background-color: #009087;
+    transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+/* checkbox input */
+
+main > #list_panel > ul > li .checkbox_item {
     position: absolute;
     top: -0.25rem;
     left: -0.25rem;
-    width: 0.75rem;
-    height: 0.75rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    z-index: 2;
     -webkit-appearance: none;
     background-color: #fafafa;
     border: 1px solid #cacece;
@@ -201,17 +266,17 @@ main > #list_panel > ul > li #checkbox_item {
     display: none;
 }
 
-main > #list_panel > ul > li:hover #checkbox_item {
+main > #list_panel > ul > li:hover .checkbox_item {
     display: block;
 }
 
-main > #list_panel > ul > li #checkbox_item:active,
-main > #list_panel > ul > li #checkbox_item:checked:active {
+main > #list_panel > ul > li .checkbox_item:active,
+main > #list_panel > ul > li .checkbox_item:checked:active {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
         inset 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-main > #list_panel > ul > li #checkbox_item:checked {
+main > #list_panel > ul > li .checkbox_item:checked {
     background-color: #e9ecee;
     border: 1px solid #adb8c0;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
@@ -221,11 +286,125 @@ main > #list_panel > ul > li #checkbox_item:checked {
     display: block;
 }
 
-main > #list_panel > ul > li #checkbox_item:checked:after {
+main > #list_panel > ul > li .checkbox_item:checked:after {
     content: '\2714';
-    font-size: 12px;
+    font-size: 13px;
     position: absolute;
     top: -0.25rem;
     left: 0rem;
-    color: #99a1a7;
+    color: #959ca2;
+}
+
+/* checkbox effect */
+
+main > #list_panel > ul > li label::after {
+    content: '';
+    position: absolute;
+    height: 4px;
+    width: 4px;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    z-index: 2;
+    cursor: none;
+    pointer-events: none;
+}
+
+main > #list_panel > ul > li .checkbox_item:checked + label {
+    color: #c3c8de;
+    animation: move 0.3s ease 0.1s forwards;
+}
+
+main > #list_panel > ul > li .checkbox_item:checked + label::after {
+    animation: firework 0.5s ease forwards 0.1s;
+}
+
+@keyframes move {
+    50% {
+        padding-left: 8px;
+        padding-right: 0px;
+    }
+    100% {
+        padding-right: 4px;
+    }
+}
+
+@keyframes slice {
+    60% {
+        width: 100%;
+        left: 4px;
+    }
+    100% {
+        width: 100%;
+        left: -2px;
+        padding-left: 0;
+    }
+}
+
+@keyframes check-01 {
+    0% {
+        width: 4px;
+        top: auto;
+        transform: rotate(0);
+    }
+    50% {
+        width: 0px;
+        top: auto;
+        transform: rotate(0);
+    }
+    51% {
+        width: 0px;
+        top: 8px;
+        transform: rotate(45deg);
+    }
+    100% {
+        width: 5px;
+        top: 8px;
+        transform: rotate(45deg);
+    }
+}
+
+@keyframes check-02 {
+    0% {
+        width: 4px;
+        top: auto;
+        transform: rotate(0);
+    }
+
+    50% {
+        width: 0px;
+        top: auto;
+        transform: rotate(0);
+    }
+
+    51% {
+        width: 0px;
+        top: 8px;
+        transform: rotate(-45deg);
+    }
+
+    100% {
+        width: 10px;
+        top: 8px;
+        transform: rotate(-45deg);
+    }
+}
+
+@keyframes firework {
+    0% {
+        opacity: 1;
+        box-shadow: 0 0 0 -2px #4f29f0, 0 0 0 -2px #4f29f0, 0 0 0 -2px #4f29f0,
+            0 0 0 -2px #4f29f0, 0 0 0 -2px #4f29f0, 0 0 0 -2px #4f29f0;
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        box-shadow: 0 -15px 0 0px #4f29f0, 14px -8px 0 0px #4f29f0,
+            14px 8px 0 0px #4f29f0, 0 15px 0 0px #4f29f0,
+            -14px 8px 0 0px #4f29f0, -14px -8px 0 0px #4f29f0;
+    }
 }

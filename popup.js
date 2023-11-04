@@ -30,11 +30,10 @@ const ICONS = {
     DOWNLOAD_STATE: "/icons/download.png",
 }
 
-const OBJS = {
+const OBJ_KEYS = {
     NOTE: "note",
     LIST: "list",
     TAB: "tab",
-    DOWNLOAD_FILE_NAME: "notix_note_data.txt",
     ITEMS: "items",
     CURRENT_DATA: "current_data"
 }
@@ -60,7 +59,7 @@ const tabNoteStyle = () => {
 }
 
 const persistCurrentTabStyle = (tab) => {
-    tab === OBJS.NOTE ? tabNoteStyle() : tabListStyle();
+    tab === OBJ_KEYS.NOTE ? tabNoteStyle() : tabListStyle();
 }
 
 const changeTab = (tab) => {
@@ -68,55 +67,80 @@ const changeTab = (tab) => {
     chrome.storage.sync.set({ tab: tab });
 }
 
-chrome.storage.sync.get(OBJS.TAB, (data) => persistCurrentTabStyle(data.tab));
+chrome.storage.sync.get(OBJ_KEYS.TAB, (data) => persistCurrentTabStyle(data.tab));
 
 // **************** list tab ****************
 
-let currentItems = [];
+let itemsList = [];
+let removesList = [];
 
-const generateEle = (id, title) => {
+const dispatchItems = () => chrome.storage.sync.set({ items: itemsList });
+
+const deleteSelectedItems = () => {
+    removesList.length > 0 ? deleteBtn.classList.remove('disabled') : deleteBtn.classList.add('disabled');
+
+    deleteBtn.addEventListener('click', () => {
+        for (let currentSelect of removesList) {
+            list.removeChild(document.getElementById(currentSelect));
+            itemsList = itemsList.filter((currentItem) => currentItem.id !== currentSelect);
+        }
+        dispatchItems();
+        loadItemsList();
+    });
+}
+
+const createNewItem = (id, title) => {
     let newItem = document.createElement('li');
-    newItem.innerHTML = `<p>${title}</p>`;
+    newItem.innerHTML = `<button>${title}</button>`;
     newItem.setAttribute('id', id);
 
     let checkboxItem = document.createElement('input');
     checkboxItem.setAttribute('type', 'checkbox');
-    checkboxItem.setAttribute('id', 'checkbox_item');
+    checkboxItem.classList.add('checkbox_item');
+    checkboxItem.setAttribute('id', `checkbox_item_${id}`);
     newItem.appendChild(checkboxItem);
 
+    let checkboxEffect = document.createElement('label');
+    checkboxEffect.setAttribute('for', `checkbox_item_${id}`);
+    newItem.appendChild(checkboxEffect);
+
     newItem.addEventListener('click', async (e) => {
-        if (e.target == checkboxItem) {
+        if (e.target == checkboxItem || e.target == checkboxEffect) {
             return;
         }
-        let choice = await currentItems.find(item => item.id === id);
+        let choice = await itemsList.find(item => item.id === id);
         chrome.storage.sync.set({ current_data: choice});
-        changeTab(OBJS.NOTE);
+        changeTab(OBJ_KEYS.NOTE);
         loadNoteData();
+    });
+
+    checkboxItem.addEventListener('click', () => {
+        if (checkboxItem.checked === true) {
+            removesList.push(id);
+        } else {
+            removesList = removesList.filter((currentItem) => currentItem !== id);
+        }
+
+        deleteSelectedItems();
     });
 
     return newItem;
 }
 
-chrome.storage.sync.get(OBJS.ITEMS, (data)=> {
-    if (data.items) {
-        for (let item of data.items) {
-            list.appendChild(generateEle(item.id, item.title));
+const loadItemsList = () => {
+    list.innerHTML = "";
+    chrome.storage.sync.get(OBJ_KEYS.ITEMS, (data)=> {
+        if (data.items) {
+            for (let item of data.items) {
+                list.appendChild(createNewItem(item.id, item.title));
+            }
+            itemsList = data.items;
+            total.innerText = itemsList.length;
         }
-        currentItems = data.items;
-        total.innerText = currentItems.length;
-    }
-});
+    });
+}
 
-const dispatchItems = () => chrome.storage.sync.set({ items: currentItems });
-
-deleteBtn.addEventListener('click', () => {
-    let selectedItems = document.querySelectorAll('li.selected');
-    for (let item of selectedItems) {
-        list.removeChild(item);
-        currentItems = currentItems.filter((currentItem) => currentItem.id !== item.id);
-    }
-    dispatchItems();
-});
+loadItemsList();
 
 newBtn.addEventListener('click', () => {
     let newData = {
@@ -125,16 +149,11 @@ newBtn.addEventListener('click', () => {
         content: ""
     }
     
-    currentItems.push(newData);
+    itemsList.push(newData);
     dispatchItems();
 
-    list.appendChild(generateEle(newData.id, newData.title));
+    list.appendChild(createNewItem(newData.id, newData.title));
 });
-
-// const removeNoteOutOfItems = (itemId) => {
-//     currentItems.splice(currentItems.indexOf(itemId), 1);
-//     chrome.storage.sync.set({ items: currentItems });
-// }
 
 // **************** note tab ****************
 
@@ -151,7 +170,7 @@ notePanel.addEventListener("mouseleave", () => {
 });
 
 homeBtn.addEventListener("click", () => {
-    changeTab(OBJS.LIST);
+    changeTab(OBJ_KEYS.LIST);
 });
 
 let currentData = {
@@ -161,7 +180,7 @@ let currentData = {
 };
 
 const loadNoteData = () => {
-    chrome.storage.sync.get(OBJS.CURRENT_DATA, (data) => {
+    chrome.storage.sync.get(OBJ_KEYS.CURRENT_DATA, (data) => {
         if(data.current_data) {
             noteInput.value = data.current_data.content;
             currentData = data.current_data;
@@ -170,10 +189,12 @@ const loadNoteData = () => {
     });
 }
 
+loadNoteData();
+
 const updateNoteDataById = () => {
-    currentItems.map((item, index) => {
+    itemsList.map((item, index) => {
         if (item.id === currentData.id) {
-            currentItems[index] = currentData;
+            itemsList[index] = currentData;
         }
     });
 
@@ -208,7 +229,7 @@ noteInput.addEventListener('input', () => {
 });
 
 resetBtn.addEventListener("click", () => {
-    chrome.storage.sync.remove(OBJS.CURRENT_DATA, () => {
+    chrome.storage.sync.remove(OBJ_KEYS.CURRENT_DATA, () => {
         noteInput.value = "";
         currentData.content = "";
         updateNoteDataById();
@@ -217,11 +238,10 @@ resetBtn.addEventListener("click", () => {
 });
 
 downloadBtn.addEventListener("click", () => {
-    var filename = OBJS.DOWNLOAD_FILE_NAME;
-    let note = noteInput.value;
+    var filename = `notix_${currentData.title}.txt`;
 
     var element = document.createElement("a");
-    element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(note));
+    element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(noteInput.value));
     element.setAttribute("download", filename);
 
     element.style.display = "none";
