@@ -28,6 +28,7 @@ const ICONS = {
     COPY_STATE: "/icons/copy.svg",
     RESET_STATE: "/icons/reset.png",
     DOWNLOAD_STATE: "/icons/download.png",
+    EDIT_STATE: "/icons/edit.svg"
 }
 
 const OBJ_KEYS = {
@@ -71,48 +72,104 @@ chrome.storage.sync.get(OBJ_KEYS.TAB, (data) => persistCurrentTabStyle(data.tab)
 
 // **************** list tab ****************
 
-let itemsList = [];
+let notesList = [];
 let removesList = [];
 
-const dispatchItems = () => chrome.storage.sync.set({ items: itemsList });
+const dispatchNotesList = () => chrome.storage.sync.set({ items: notesList });
 
-const deleteSelectedItems = () => {
+const deleteSelectedNotes = () => {
     removesList.length > 0 ? deleteBtn.classList.remove('disabled') : deleteBtn.classList.add('disabled');
 
     deleteBtn.addEventListener('click', () => {
         for (let currentSelect of removesList) {
             list.removeChild(document.getElementById(currentSelect));
-            itemsList = itemsList.filter((currentItem) => currentItem.id !== currentSelect);
+            notesList = notesList.filter((currentItem) => currentItem.id !== currentSelect);
         }
-        dispatchItems();
-        loadItemsList();
+        dispatchNotesList();
+        loadNotesList();
     });
 }
 
-const createNewItem = (id, title) => {
+const updateNoteById = () => {
+    notesList.map((item, index) => {
+        if (item.id === currentNoteData.id) {
+            notesList[index] = currentNoteData;
+        }
+    });
+
+    dispatchNotesList();
+}
+
+const createNewNote = (id, title) => {
     let newItem = document.createElement('li');
-    newItem.innerHTML = `<button>${title}</button>`;
     newItem.setAttribute('id', id);
+    
+    let titleBtn = document.createElement('button');
+    titleBtn.setAttribute('type', 'button');
+
+    let titleBtnSpan = document.createElement('span');
+    titleBtnSpan.classList.add('note_title');
+    titleBtnSpan.innerText = title;
+
+    titleBtnSpan.addEventListener('click', async () => {
+        let choice = await notesList.find(item => item.id === id);
+        chrome.storage.sync.set({ current_data: choice});
+        changeTab(OBJ_KEYS.NOTE);
+        loadCurrentNoteData();
+    });
+
+    titleBtn.appendChild(titleBtnSpan);
+
+    let editBtn = document.createElement('img');
+    editBtn.setAttribute('src', ICONS.EDIT_STATE);
+    editBtn.classList.add('edit_btn');
+    editBtn.setAttribute('title', 'edit');
+    titleBtn.appendChild(editBtn);
+
+    editBtn.addEventListener('click', () => {
+        let titleEditInput = document.createElement('input');
+        titleEditInput.setAttribute('type', 'text');
+        titleEditInput.classList.add('note_title');
+        titleEditInput.value = title;
+        titleEditInput.setAttribute('title', 'edit');
+        titleEditInput.style.cursor = "auto";
+        titleBtnSpan.replaceWith(titleEditInput);
+        titleEditInput.focus();
+
+        let titleEditBtn = document.createElement('img');
+        titleEditBtn.setAttribute('src', ICONS.SAVE_STATE);
+        titleEditBtn.classList.add('edit_btn');
+        titleEditBtn.setAttribute('title', 'done');
+        editBtn.replaceWith(titleEditBtn);
+
+        titleEditBtn.addEventListener('click', async () => {
+            title = titleEditInput.value;
+            titleBtnSpan.innerText = title;
+            notesList.map((item, index) => {
+                if (item.id === id) {
+                    notesList[index].title = title;
+                }
+            });
+            await dispatchNotesList();
+            titleEditInput.replaceWith(titleBtnSpan);
+            titleEditBtn.replaceWith(editBtn);
+            titleEditInput.remove();
+            titleEditBtn.remove();
+        });
+    });
+
+    newItem.appendChild(titleBtn);
 
     let checkboxItem = document.createElement('input');
     checkboxItem.setAttribute('type', 'checkbox');
     checkboxItem.classList.add('checkbox_item');
     checkboxItem.setAttribute('id', `checkbox_item_${id}`);
+    checkboxItem.setAttribute('title', 'select');
     newItem.appendChild(checkboxItem);
 
     let checkboxEffect = document.createElement('label');
     checkboxEffect.setAttribute('for', `checkbox_item_${id}`);
     newItem.appendChild(checkboxEffect);
-
-    newItem.addEventListener('click', async (e) => {
-        if (e.target == checkboxItem || e.target == checkboxEffect) {
-            return;
-        }
-        let choice = await itemsList.find(item => item.id === id);
-        chrome.storage.sync.set({ current_data: choice});
-        changeTab(OBJ_KEYS.NOTE);
-        loadNoteData();
-    });
 
     checkboxItem.addEventListener('click', () => {
         if (checkboxItem.checked === true) {
@@ -121,26 +178,26 @@ const createNewItem = (id, title) => {
             removesList = removesList.filter((currentItem) => currentItem !== id);
         }
 
-        deleteSelectedItems();
+        deleteSelectedNotes();
     });
 
     return newItem;
 }
 
-const loadItemsList = () => {
+const loadNotesList = () => {
     list.innerHTML = "";
     chrome.storage.sync.get(OBJ_KEYS.ITEMS, (data)=> {
         if (data.items) {
             for (let item of data.items) {
-                list.appendChild(createNewItem(item.id, item.title));
+                list.appendChild(createNewNote(item.id, item.title));
             }
-            itemsList = data.items;
-            total.innerText = itemsList.length;
+            notesList = data.items;
+            total.innerText = notesList.length;
         }
     });
 }
 
-loadItemsList();
+loadNotesList();
 
 newBtn.addEventListener('click', () => {
     let newData = {
@@ -149,10 +206,10 @@ newBtn.addEventListener('click', () => {
         content: ""
     }
     
-    itemsList.push(newData);
-    dispatchItems();
+    notesList.push(newData);
+    dispatchNotesList();
 
-    list.appendChild(createNewItem(newData.id, newData.title));
+    list.appendChild(createNewNote(newData.id, newData.title));
 });
 
 // **************** note tab ****************
@@ -173,42 +230,32 @@ homeBtn.addEventListener("click", () => {
     changeTab(OBJ_KEYS.LIST);
 });
 
-let currentData = {
+let currentNoteData = {
     id: "",
     title: "",
     content: ""
 };
 
-const loadNoteData = () => {
+const loadCurrentNoteData = () => {
     chrome.storage.sync.get(OBJ_KEYS.CURRENT_DATA, (data) => {
         if(data.current_data) {
             noteInput.value = data.current_data.content;
-            currentData = data.current_data;
+            currentNoteData = data.current_data;
             noteName.innerText = data.current_data.title;
         }
     });
 }
 
-loadNoteData();
-
-const updateNoteDataById = () => {
-    itemsList.map((item, index) => {
-        if (item.id === currentData.id) {
-            itemsList[index] = currentData;
-        }
-    });
-
-    dispatchItems();
-}
+loadCurrentNoteData();
 
 const saveData = () => {
-    currentData.content = noteInput.value;
+    currentNoteData.content = noteInput.value;
 
-    chrome.storage.sync.set({ current_data: currentData}, () => {
+    chrome.storage.sync.set({ current_data: currentNoteData}, () => {
         images[3].src = ICONS.DONE_STATE;
     });
 
-    updateNoteDataById();
+    updateNoteById();
 }
 
 saveBtn.addEventListener("click", () => {
@@ -231,14 +278,14 @@ noteInput.addEventListener('input', () => {
 resetBtn.addEventListener("click", () => {
     chrome.storage.sync.remove(OBJ_KEYS.CURRENT_DATA, () => {
         noteInput.value = "";
-        currentData.content = "";
-        updateNoteDataById();
+        currentNoteData.content = "";
+        updateNoteById();
         images[0].src = ICONS.DONE_STATE;
     });
 });
 
 downloadBtn.addEventListener("click", () => {
-    var filename = `notix_${currentData.title}.txt`;
+    var filename = `notix_${currentNoteData.title}.txt`;
 
     var element = document.createElement("a");
     element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(noteInput.value));

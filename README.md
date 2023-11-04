@@ -1,8 +1,10 @@
 <div align="center">
   <img src="https://img.shields.io/badge/w3c-validated-brightgreen" alt="w3c_badge" />
   <img src="https://img.shields.io/github/languages/code-size/thuongtruong1009/notix" alt="code_size_badge" />
-  <img src="https://img.shields.io/badge/manifest_version-v3-pink" alt="manifest_version_badge" />
-  <img src="https://img.shields.io/github/license/thuongtruong1009/notix" alt="license_badge" />
+  <img alt="GitHub release" src="https://img.shields.io/github/v/release/thuongtruong1009/notix?color=yellow">
+  <img src="https://img.shields.io/badge/manifest-v3-pink" alt="manifest_version_badge" />
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/thuongtruong1009/notix" alt="license_badge" /></a>
+  <a href="https://hits.dwyl.com/thuongtruong1009/notix" rel="nofollow"><img src="https://hits.dwyl.com/thuongtruong1009/notix.svg" alt="HitCount" data-canonical-src="https://hits.dwyl.com/thuongtruong1009/notix.svg" style="max-width: 100%;border-radius: 3px"></a>
 
 <img src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/favicon.ico" width="28" height="28" /> $\huge\textcolor{purple}{\text{Notix}}$
 
