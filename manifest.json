@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Notix",
-  "version": "1.0",
+  "version": "2.0",
   "description": "A Chrome extension that helps in saving temporary notes",
   "author": "Tran Nguyen Thuong Truong",
   "homepage_url": "https://github.com/thuongtruong1009/notix",

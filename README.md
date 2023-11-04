@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://img.shields.io/badge/w3c-validated-brightgreen" alt="w3c_badge" />
   <img src="https://img.shields.io/github/languages/code-size/thuongtruong1009/notix" alt="code_size_badge" />
-  <img src="https://img.shields.io/badge/chrome_manifest-v3-pink" alt="manifest_version_badge" />
+  <img src="https://img.shields.io/badge/manifest_version-v3-pink" alt="manifest_version_badge" />
   <img src="https://img.shields.io/github/license/thuongtruong1009/notix" alt="license_badge" />
 
 <img src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/favicon.ico" width="28" height="28" /> $\huge\textcolor{purple}{\text{Notix}}$
@@ -14,22 +14,24 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 
 ## 📢 About
 
--   Notix is a simple extension that helps in saving temporary notes. It is built with HTML, CSS and JavaScript. It is cross-browser and can be used in any browser that supports extensions.
+-   Notix is a simple extension that helps in saving temporary notes. It is built with HTML, CSS and JavaScript based on Chrome manifest verion 3. It is cross-browser compatible extension that means it can be used on any browser.
 
-## 🎉 Features
+## 🎉 What's new
 
 ##### (Not support in <ins>http://localhost</ins> static living)
 
--   Create, edit, delete and save notes
--   Copy notes to clipboard
+-   Create new note, edit note data, delete selected notes, clear text and dispatch notes data with unlimited storage time
+-   Copy note text to clipboard
 -   Download notes as .txt files
--   Auto save typed notes
--   Cross-browsers
+-   Auto save typed note text
+-   Not reset data when closing browser
+-   Display total and title of notes
+-   Cross-browsers (Chrome, Firefox, Edge, Opera, Brave, etc.)
 -   UI/UX friendly (transition button list, shadow effect, gradient title etc.)
 
 ## 🎯 Todo
 
--   [ ] Setting options (dark mode, font color, font size, popup size, etc.)
+-   [ ] Setting options (dark mode, font color, font size, popup size, autosave-time, transition effects, etc.)
 
 ## 🧩 Built With
 
