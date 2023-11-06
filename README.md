@@ -12,7 +12,9 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 
 </div>
 
-![Preview](public/preview.png)
+<div align="center">
+  <img src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/preview.png" alt="preview1" width="400" /><img src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/preview.png" alt="preview2" width="400" />
+</div>
 
 ## 📢 About
 

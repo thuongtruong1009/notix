@@ -18,9 +18,9 @@ let saveBtn = document.getElementById("save");
 let images = document.querySelectorAll("ul>li>img")
 
 let list = document.querySelector('#list_panel > ul');
+let listItem = document.querySelector('#list_panel > ul > li');
 let deleteBtn = document.querySelector('#list_header > #delete_btn');
 let newBtn = document.querySelector('#list_header > #new_btn');
-let listItem = document.querySelector('#list_panel > ul > li');
 
 const ICONS = {
     SAVE_STATE: "/icons/save.svg",
@@ -28,7 +28,8 @@ const ICONS = {
     COPY_STATE: "/icons/copy.svg",
     RESET_STATE: "/icons/reset.png",
     DOWNLOAD_STATE: "/icons/download.png",
-    EDIT_STATE: "/icons/edit.svg"
+    EDIT_STATE: "/icons/edit.svg",
+    CANCEL_STATE: "/icons/cancel.svg"
 }
 
 const OBJ_KEYS = {
@@ -127,22 +128,44 @@ const createNewNote = (id, title) => {
     titleBtn.appendChild(editBtn);
 
     editBtn.addEventListener('click', () => {
+        titleBtn.innerHTML = "";
+        newItem.classList.add('choiced');
+
         let titleEditInput = document.createElement('input');
         titleEditInput.setAttribute('type', 'text');
         titleEditInput.classList.add('note_title');
         titleEditInput.value = title;
         titleEditInput.setAttribute('title', 'edit');
         titleEditInput.style.cursor = "auto";
-        titleBtnSpan.replaceWith(titleEditInput);
+        titleBtn.appendChild(titleEditInput);
         titleEditInput.focus();
 
-        let titleEditBtn = document.createElement('img');
-        titleEditBtn.setAttribute('src', ICONS.SAVE_STATE);
-        titleEditBtn.classList.add('edit_btn');
-        titleEditBtn.setAttribute('title', 'done');
-        editBtn.replaceWith(titleEditBtn);
+        let titleCancelEditBtn = document.createElement('img');
+        titleCancelEditBtn.setAttribute('src', ICONS.CANCEL_STATE);
+        titleCancelEditBtn.classList.add('cancel_btn');
+        titleCancelEditBtn.setAttribute('title', 'cancel');
+        titleBtn.appendChild(titleCancelEditBtn);
 
-        titleEditBtn.addEventListener('click', async () => {
+        const cancelEdit = () => {
+            titleEditInput.replaceWith(titleBtnSpan);
+            titleEditDoneBtn.replaceWith(editBtn);
+            titleEditInput.remove();
+            titleEditDoneBtn.remove();
+            titleCancelEditBtn.remove();
+            newItem.classList.remove('choiced');
+        }
+
+        titleCancelEditBtn.addEventListener('click', () => {
+            cancelEdit();
+        });
+
+        let titleEditDoneBtn = document.createElement('img');
+        titleEditDoneBtn.setAttribute('src', ICONS.SAVE_STATE);
+        titleEditDoneBtn.classList.add('edit_btn');
+        titleEditDoneBtn.setAttribute('title', 'done');
+        titleBtn.appendChild(titleEditDoneBtn);
+
+        titleEditDoneBtn.addEventListener('click', async () => {
             title = titleEditInput.value;
             titleBtnSpan.innerText = title;
             notesList.map((item, index) => {
@@ -151,10 +174,7 @@ const createNewNote = (id, title) => {
                 }
             });
             await dispatchNotesList();
-            titleEditInput.replaceWith(titleBtnSpan);
-            titleEditBtn.replaceWith(editBtn);
-            titleEditInput.remove();
-            titleEditBtn.remove();
+            cancelEdit();
         });
     });
 
@@ -253,6 +273,7 @@ const saveData = () => {
 
     chrome.storage.sync.set({ current_data: currentNoteData}, () => {
         images[3].src = ICONS.DONE_STATE;
+        images[3].title = "saved";
     });
 
     updateNoteById();
@@ -304,6 +325,7 @@ copyBtn.addEventListener("click", () => {
     let note = noteInput.value;
     navigator.clipboard.writeText(note).then(() => {
         images[2].src = ICONS.DONE_STATE;
+        images[2].title = "copied";
     }, () => {
         alert("Error copying note");
     });

@@ -237,19 +237,22 @@ main > #list_panel > ul > li:hover button {
     border: 1px solid #009087;
 }
 
+main > #list_panel > ul > li.choiced button:before,
 main > #list_panel > ul > li:hover button:before {
     top: -35%;
     background-color: #009087;
     transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
+main > #list_panel > ul > li.choiced button:after,
 main > #list_panel > ul > li:hover button:after {
     top: -45%;
     background-color: #009087;
     transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
-main > #list_panel > ul > li button .note_title {
+main > #list_panel > ul > li button .note_title,
+main > #list_panel > ul > li button input[type='text'] {
     width: 85%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -257,8 +260,16 @@ main > #list_panel > ul > li button .note_title {
     cursor: pointer;
 }
 
-/* edit button */
+main > #list_panel > ul > li button input[type='text'] {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background: #fafafa;
+    padding: 2.5px;
+    font-size: 0.9em;
+}
 
+/* edit button */
+main > #list_panel > ul > li button .cancel_btn,
 main > #list_panel > ul > li button .edit_btn {
     width: 1.25rem;
     height: 1.25rem;
@@ -273,8 +284,15 @@ main > #list_panel > ul > li button .edit_btn {
     transition: all 0.2s ease-in-out;
 }
 
+main > #list_panel > ul > li.choiced button .cancel_btn,
+main > #list_panel > ul > li:hover button .cancel_btn,
+main > #list_panel > ul > li.choiced button .edit_btn,
 main > #list_panel > ul > li:hover button .edit_btn {
     transform: scale(1);
+}
+
+main > #list_panel > ul > li button .cancel_btn {
+    margin: 0 0.2rem;
 }
 
 /* checkbox input */
