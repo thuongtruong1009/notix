@@ -49,6 +49,7 @@ ul {
 main {
     width: 30rem;
     height: 17rem;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -123,7 +124,8 @@ header #list_header > h3 #total {
 
 header #home img,
 header ul > li > img,
-header button > img {
+header button > img,
+main #note_control img {
     width: 1rem;
     height: 1rem;
 }
@@ -489,4 +491,24 @@ main > #note_info p:last-child {
 
 main > #note_info p span:nth-child(1) {
     margin-right: 0.2rem;
+}
+
+/* note control */
+
+main #note_control {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 2rem;
+    opacity: 0.8;
+}
+
+main #note_control li {
+    margin-left: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 }

@@ -25,13 +25,15 @@ let downloadImageBtn = document.getElementById("download_img");
 let downloadTextBtn = document.getElementById("download_text");
 let copyTextBtn = document.getElementById("copy_text");
 let saveBtn = document.getElementById("save");
-let images = document.querySelectorAll("ul>li>img");
+let images = document.querySelectorAll("#note_header > li > img");
 
 let noteInfo = document.getElementById("note_info");
 let noteTotalLines = document.getElementById("total_lines");
 let noteTotalWords = document.getElementById("total_words");
 let noteTotalSize = document.getElementById("total_size");
 let noteLastUpdate = document.getElementById("last_update");
+
+let voiceToTextBtn = document.getElementById("voice_to_text");
 
 const ICONS = {
     SAVE_STATE: "/icons/save.svg",
@@ -42,7 +44,9 @@ const ICONS = {
     DOWNLOAD_TEXT_STATE: "/icons/download_text.png",
     EDIT_STATE: "/icons/edit.svg",
     CANCEL_STATE: "/icons/cancel.svg",
-    CAPTURE_STATE: "/icons/capture.png"
+    CAPTURE_STATE: "/icons/capture.png",
+    MICROPHONE_STATE: "/icons/microphone.png",
+    RECORDING_STATE: "/icons/recording.png"
 };
 
 const OBJ_KEYS = {
@@ -234,16 +238,6 @@ const loadNotesList = () => {
 
 loadNotesList();
 
-const calLastUpdate = (timestamp) => {
-    // const timestamp = Date.now();
-    const date = new Date(timestamp);
-    const day = date.getDate();
-    const month = date.getMonth() + 1; // Month is zero-based, so add 1
-    const year = date.getFullYear();
-    const formattedDate = `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
-    return formattedDate;
-}
-
 newBtn.addEventListener('click', () => {
     let newData = {
         id: Date.now(),
@@ -285,7 +279,17 @@ let currentNoteData = {
 
 let currentExportName = "";
 
-const renderNotInfo = () => {
+const calLastUpdate = (timestamp) => {
+    const date = new Date(timestamp);
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // Month is zero-based, so add 1
+    const year = date.getFullYear();
+    const formattedDate = `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
+    if(day === NaN || month === NaN || year === NaN) return "unknown";
+    return formattedDate;
+}
+
+const renderNoteInfo = () => {
     noteTotalLines.innerText = noteInput.value.split("\n").length + 1;
     noteTotalWords.innerText = noteInput.value.split(/[\s,]+/).length - 1;
     noteTotalSize.innerText = new Blob([noteInput.value]).size/1000 + " kb";
@@ -299,7 +303,7 @@ const loadCurrentNoteData = () => {
             currentNoteData = data.current_data;
             noteName.innerText = data.current_data.title;
 
-            renderNotInfo();
+            renderNoteInfo();
             currentExportName = `notix_${data.current_data.title}`;
         }
     });
@@ -324,8 +328,6 @@ saveBtn.addEventListener("click", () => {
 });
 
 noteInput.addEventListener('input', () => {
-    renderNotInfo();
-
     for (let image of images) {
         image.style.opacity = "1";
     }
@@ -435,3 +437,47 @@ downloadImageBtn.addEventListener("click", async () => {
         images[2].title = "downloaded image";
     });
 }, false);
+
+// voice recognition
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+recognition.continuous = true;
+recognition.interimResults = true;
+
+recognition.onresult = (event) => {
+    const result = event.results[event.resultIndex][0].transcript;
+    noteInput.value += result;
+};
+
+recognition.onerror = (event) => {
+    alert('Speech recognition error. Please try again.', event.error);
+};
+
+voiceToTextBtn.addEventListener('click', () => {
+    var permission = navigator.permissions.query({name: 'microphone'});
+    permission.then((permissionStatus) => {
+        if (permissionStatus.state == "denied" || permissionStatus.state == "prompt") {
+            const enableMicString = "Microphone access denied. Please allow microphone access in your browser settings.\n\n* Step 1: Right click on the Notix extension icon\n* Step 2: Choose View web permission option\n* Step 3: Change microphone selection to Allow";
+            alert(enableMicString);
+        }
+        if (permissionStatus.state == "granted") {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
+                recognition.start();
+                let button = document.querySelector("#voice_to_text > img");
+                button.src = ICONS.RECORDING_STATE;
+                button.title = "recording";
+                noteInput.value += " ";
+
+                button.addEventListener('click', () => {
+                    recognition.stop();
+                    saveData();
+                    button.src = ICONS.MICROPHONE_STATE;
+                    button.title = "voice to text";
+                });
+            }).catch((error) => {
+                console.error('Error accessing the microphone:', error);
+                alert('Microphone access denied. Please allow microphone access in your browser settings.');
+            });
+        }
+    });
+});
