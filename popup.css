@@ -251,6 +251,7 @@ main > #list_panel > ul > li:hover button:after {
     transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
+main header #note_name,
 main > #list_panel > ul > li button .note_title,
 main > #list_panel > ul > li button input[type='text'] {
     width: 85%;
