@@ -11,10 +11,7 @@
     "128": "icons/icon128.png"
   },
   "permissions": [
-    "storage",
-    "scripting",
-    "activeTab",
-    "tabs"
+    "storage"
   ],
   "action": {
     "default_icon": {
@@ -25,8 +22,15 @@
     "default_popup": "popup.html",
     "default_title": "Notix"
   },
-  "background": {
-    "service_worker": "service_worker.js",
-    "type": "module"
-  }
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "scripts/domtoimg.js",
+        "scripts/voice_to_text.js"
+      ],
+      "matches": [
+        "*://*/*"
+      ]
+    }
+  ]
 }

@@ -64,8 +64,36 @@
                 <textarea id="note"></textarea>
             </div>
         </section>
+        <div id="note_info">
+            <p>
+                <span>Total lines:</span>
+                <span id="total_lines">0</span>
+            </p>
+            <p>
+                <span>Total words:</span>
+                <span id="total_words">0</span>
+            </p>
+            <p>
+                <span>Total size:</span>
+                <span id="total_size">0</span>
+            </p>
+            <p>
+                <span>Last update:</span>
+                <span id="last_update">0</span>
+            </p>
+        </div>
     </main>
+
+    <p><button type="button" id="start-btn">Speech to Text</button> &nbsp; <span id="action"></span></p>
+        <div id="output"></div>
+
+        <!-- <button id="startButton">Start</button>
+<button id="stopButton">Stop</button>
+<div id="output"></div> -->
+        
     <script src="popup.js"></script>
+    <script src="scripts/voice_to_text.js"></script>
+    <script src="scripts/domtoimg.js"></script>
 </body>
 
 </html>

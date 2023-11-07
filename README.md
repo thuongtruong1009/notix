@@ -29,13 +29,19 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 -   Export/download notes data as .txt files, .png images
 -   Auto save typed note text
 -   Not reset data when closing the browser
--   Display the total and title of notes
+-   Display notes information (total notes, name - size - total words - total lines - last update time of current note, etc.)
 -   Cross-browsers (Chrome, Firefox, Edge, Opera, Brave, etc.)
 -   UI/UX friendly (transition button list, shadow effect, gradient title etc.)
 
 ## 🎯 Todo
 
--   [ ] Setting options (dark mode, font color, font size, popup size, autosave-time, transition effects, etc.)
+-   [ ] Voice to text, listening audio reading text
+-   [ ] Scroll to top button
+-   [ ] Search notes by name
+-   [ ] Setting options (dark mode, font color, font size, popup size, autosave-time, transition effects, current version etc.)
+-   [ ] Share notes by link
+-   [ ] Edit tool panel
+-   [ ] Add more languages (English, Vietnamese, etc.)
 
 ## 🧩 Built With
 
