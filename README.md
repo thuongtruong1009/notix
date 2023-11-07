@@ -25,8 +25,8 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 ##### (Not support in <ins>http://localhost</ins> static living)
 
 -   Create new notes, edit note data, delete selected notes, clear text, and dispatch notes data with unlimited storage time
--   Copy note text to the clipboard
--   Download notes as .txt files
+-   Copy note as text, image to the clipboard
+-   Export/download notes data as .txt files, .png images
 -   Auto save typed note text
 -   Not reset data when closing the browser
 -   Display the total and title of notes
