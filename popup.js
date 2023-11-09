@@ -12,6 +12,7 @@ let total = document.querySelector("#total");
 
 let listPanel = document.querySelector("#list_panel");
 let notePanel = document.querySelector("#note_panel");
+let notePanelHeader = document.querySelector(".note_head_panel");
 
 let list = document.querySelector('#list_panel > ul');
 let listItem = document.querySelector('#list_panel > ul > li');
@@ -36,17 +37,17 @@ let noteLastUpdate = document.getElementById("last_update");
 let voiceToTextBtn = document.getElementById("voice_to_text");
 
 const ICONS = {
-    SAVE_STATE: "/icons/save.svg",
-    DONE_STATE: "/icons/tick.svg",
-    COPY_STATE: "/icons/copy.svg",
-    CLEAR_STATE: "/icons/clear.png",
-    DOWNLOAD_IMG_STATE: "/icons/download_image.png",
-    DOWNLOAD_TEXT_STATE: "/icons/download_text.png",
-    EDIT_STATE: "/icons/edit.svg",
-    CANCEL_STATE: "/icons/cancel.svg",
-    CAPTURE_STATE: "/icons/capture.png",
-    MICROPHONE_STATE: "/icons/microphone.png",
-    RECORDING_STATE: "/icons/recording.png"
+    SAVE_STATE: "./icons/save.svg",
+    DONE_STATE: "./icons/tick.svg",
+    COPY_STATE: "./icons/copy.svg",
+    CLEAR_STATE: "./icons/clear.png",
+    DOWNLOAD_IMG_STATE: "./icons/download_image.png",
+    DOWNLOAD_TEXT_STATE: "./icons/download_text.png",
+    EDIT_STATE: "./icons/edit.svg",
+    CANCEL_STATE: "./icons/cancel.svg",
+    CAPTURE_STATE: "./icons/capture.png",
+    MICROPHONE_STATE: "./icons/microphone.png",
+    RECORDING_STATE: "./icons/recording.png"
 };
 
 const OBJ_KEYS = {
@@ -66,6 +67,7 @@ const tabListStyle = () => {
     homeBtn.style.display = "none";
     noteName.style.display = "none";
     noteInfo.style.display = "none";
+    notePanelHeader.style.display = "none";
 }
 
 const tabNoteStyle = () => {
@@ -77,6 +79,7 @@ const tabNoteStyle = () => {
     homeBtn.style.display = "block";
     noteName.style.display = "inline-flex";
     noteInfo.style.display = "flex";
+    notePanelHeader.style.display = "flex";
 }
 
 const persistCurrentTabStyle = (tab) => {
@@ -236,39 +239,27 @@ const loadNotesList = () => {
     });
 }
 
-loadNotesList();
+const initListDOM = () => {
+    loadNotesList();
 
-newBtn.addEventListener('click', () => {
-    let newData = {
-        id: Date.now(),
-        title: Date.now(),
-        content: "",
-        lastUpdate: Date.now()
-    }
+    newBtn.addEventListener('click', () => {
+        let newData = {
+            id: Date.now(),
+            title: Date.now(),
+            content: "",
+            lastUpdate: Date.now()
+        }
+        
+        notesList.push(newData);
+        dispatchNotesList();
     
-    notesList.push(newData);
-    dispatchNotesList();
+        list.appendChild(createNewNote(newData.id, newData.title));
+    });
+}
 
-    list.appendChild(createNewNote(newData.id, newData.title));
-});
+initListDOM();
 
 // **************** note tab ****************
-
-notePanel.addEventListener('DOMContentLoaded', () => {
-    noteInput.scrollTop = noteInput.scrollHeight;
-});
-
-notePanel.addEventListener("mouseenter", () => {
-    notePanel.classList.add("active");
-});
-
-notePanel.addEventListener("mouseleave", () => {
-    notePanel.classList.remove("active");
-});
-
-homeBtn.addEventListener("click", () => {
-    changeTab(OBJ_KEYS.LIST);
-});
 
 let currentNoteData = {
     id: "",
@@ -281,20 +272,37 @@ let currentExportName = "";
 
 const calLastUpdate = (timestamp) => {
     const date = new Date(timestamp);
-    const day = date.getDate();
-    const month = date.getMonth() + 1; // Month is zero-based, so add 1
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so add 1
     const year = date.getFullYear();
-    const formattedDate = `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
+    const formattedDate = `${day}/${month}/${year}`;
     if(day === NaN || month === NaN || year === NaN) return "unknown";
     return formattedDate;
 }
 
 const renderNoteInfo = () => {
-    noteTotalLines.innerText = noteInput.value.split("\n").length + 1;
-    noteTotalWords.innerText = noteInput.value.split(/[\s,]+/).length - 1;
+    noteTotalLines.innerText = noteInput.value === "" ?  0 : noteInput.value.split("\n").length;
+    noteTotalWords.innerText = noteInput.value.trim().split(/[\s]+/).length;
     noteTotalSize.innerText = new Blob([noteInput.value]).size/1000 + " kb";
     noteLastUpdate.innerText = calLastUpdate(currentNoteData.lastUpdate);
 }
+
+// const persistNoteBtnStyle = {
+//     unDone: (order) => {
+//         images[order].src = ICONS.SAVE_STATE;
+//         images[order].title = "save";
+//     }
+
+    // for (let image of images) {
+    //     image.style.opacity = "1";
+    // }
+    // images[0].src = ICONS.CLEAR_STATE;
+    // images[1].src = ICONS.CAPTURE_STATE;
+    // images[2].src = ICONS.DOWNLOAD_IMG_STATE;
+    // images[3].src = ICONS.DOWNLOAD_TEXT_STATE;
+    // images[4].src = ICONS.COPY_STATE;
+    // images[5].src = ICONS.SAVE_STATE;
+// }
 
 const loadCurrentNoteData = () => {
     chrome.storage.sync.get(OBJ_KEYS.CURRENT_DATA, (data) => {
@@ -309,92 +317,6 @@ const loadCurrentNoteData = () => {
     });
 }
 
-loadCurrentNoteData();
-
-const saveData = () => {
-    currentNoteData.content = noteInput.value;
-    currentNoteData.lastUpdate = Date.now();
-
-    chrome.storage.sync.set({ current_data: currentNoteData}, () => {
-        images[5].src = ICONS.DONE_STATE;
-        images[5].title = "saved";
-    });
-
-    updateNoteById();
-}
-
-saveBtn.addEventListener("click", () => {
-    saveData();
-});
-
-noteInput.addEventListener('input', () => {
-    for (let image of images) {
-        image.style.opacity = "1";
-    }
-    images[0].src = ICONS.CLEAR_STATE;
-    images[1].src = ICONS.CAPTURE_STATE;
-    images[2].src = ICONS.DOWNLOAD_IMG_STATE;
-    images[3].src = ICONS.DOWNLOAD_TEXT_STATE;
-    images[4].src = ICONS.COPY_STATE;
-    images[5].src = ICONS.SAVE_STATE;
-
-    setTimeout(() => {
-        saveData();
-    }, 1000)
-});
-
-clearBtn.addEventListener("click", () => {
-    chrome.storage.sync.remove(OBJ_KEYS.CURRENT_DATA, () => {
-        noteInput.value = "";
-        currentNoteData.content = "";
-        currentNoteData.lastUpdate = Date.now();
-        updateNoteById();
-        images[0].src = ICONS.DONE_STATE;
-    });
-});
-
-downloadTextBtn.addEventListener("click", () => {
-    var element = document.createElement("a");
-    element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(noteInput.value));
-    element.setAttribute("download", `${currentExportName}.txt`);
-
-    element.style.display = "none";
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
-    images[3].src = ICONS.DONE_STATE;
-    images[3].title = "downloaded text";
-}, false);
-
-copyTextBtn.addEventListener("click", () => {
-    let note = noteInput.value;
-    navigator.clipboard.writeText(note).then(() => {
-        images[4].src = ICONS.DONE_STATE;
-        images[5].title = "copied text";
-    }, () => {
-        alert("Error when copying to clipboard");
-    });
-});
-
-// paste image to note
-
-// document.onpaste = function (event) {
-//     var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-//     console.log(JSON.stringify(items));
-//     for (var index in items) {
-//         var item = items[index];
-//         if (item.kind === 'file') {
-//             var blob = item.getAsFile();
-//             var reader = new FileReader();
-//             reader.onload = function (event) {
-//                 console.log(event.target.result);
-//             }; 
-//             reader.readAsDataURL(blob);
-//         }
-//     }
-// };
 
 const exportToImage = (cb) => {
     domtoimage.toPng(main).then(async(dataUrl) => {
@@ -404,80 +326,177 @@ const exportToImage = (cb) => {
     });
 }
 
-captureBtn.addEventListener("click", async () => {
-    header.style.display = "none";
+const initNoteDOM = () => {
+    loadCurrentNoteData();
 
-    exportToImage(async(dataUrl) => {
-        await navigator.clipboard.write([
-            new ClipboardItem({
-                'image/png': await fetch(dataUrl).then((r) => r.blob()),
-            })
-        ]);
-
-        header.style.display = "flex";
-        images[1].src = ICONS.DONE_STATE;
-        images[1].title = "copied screenshot capture";
+    notePanel.addEventListener('DOMContentLoaded', () => {
+        noteInput.scrollTop = noteInput.scrollHeight;
     });
-});
+    
+    homeBtn.addEventListener("click", () => {
+        changeTab(OBJ_KEYS.LIST);
+    });
 
-downloadImageBtn.addEventListener("click", async () => {
-    header.style.display = "none";
-
-    exportToImage(async(dataUrl) => {
+    const saveData = () => {
+        currentNoteData.content = noteInput.value;
+        currentNoteData.lastUpdate = Date.now();
+    
+        chrome.storage.sync.set({ current_data: currentNoteData}, () => {
+            updateNoteById();
+            renderNoteInfo();
+    
+            images[5].src = ICONS.DONE_STATE;
+            images[5].title = "saved";
+    
+            setTimeout(() => {
+                images[5].src = ICONS.SAVE_STATE;
+                images[5].title = "save";
+            }, 2000);
+        });
+    
+    }
+    
+    saveBtn.addEventListener("click", () => {
+        saveData();
+    });
+    
+    noteInput.addEventListener('input', () => {
+        // initNoteStyle();
+        setTimeout(() => {
+            saveData();
+        }, 1000)
+    });
+    
+    clearBtn.addEventListener("click", () => {
+        chrome.storage.sync.remove(OBJ_KEYS.CURRENT_DATA, () => {
+            noteInput.value = "";
+            currentNoteData.content = "";
+            currentNoteData.lastUpdate = Date.now();
+            updateNoteById();
+            images[0].src = ICONS.DONE_STATE;
+        });
+    });
+    
+    downloadTextBtn.addEventListener("click", () => {
         var element = document.createElement("a");
-        element.setAttribute("href", dataUrl);
-        element.setAttribute("download", `${currentExportName}.png`);
+        element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(noteInput.value));
+        element.setAttribute("download", `${currentExportName}.txt`);
+    
         element.style.display = "none";
         document.body.appendChild(element);
+    
         element.click();
+    
         document.body.removeChild(element);
-
-        header.style.display = "flex";
-        images[2].src = ICONS.DONE_STATE;
-        images[2].title = "downloaded image";
+        images[3].src = ICONS.DONE_STATE;
+        images[3].title = "downloaded text";
+    }, false);
+    
+    copyTextBtn.addEventListener("click", () => {
+        let note = noteInput.value;
+        navigator.clipboard.writeText(note).then(() => {
+            images[4].src = ICONS.DONE_STATE;
+            images[5].title = "copied text";
+        }, () => {
+            alert("Error when copying to clipboard");
+        });
     });
-}, false);
+    
+    // paste image to note
+    
+    // document.onpaste = function (event) {
+    //     var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    //     console.log(JSON.stringify(items));
+    //     for (var index in items) {
+    //         var item = items[index];
+    //         if (item.kind === 'file') {
+    //             var blob = item.getAsFile();
+    //             var reader = new FileReader();
+    //             reader.onload = function (event) {
+    //                 console.log(event.target.result);
+    //             }; 
+    //             reader.readAsDataURL(blob);
+    //         }
+    //     }
+    // };
+    
+    captureBtn.addEventListener("click", async () => {
+        header.style.display = "none";
+    
+        exportToImage(async(dataUrl) => {
+            await navigator.clipboard.write([
+                new ClipboardItem({
+                    'image/png': await fetch(dataUrl).then((r) => r.blob()),
+                })
+            ]);
+    
+            header.style.display = "flex";
+            images[1].src = ICONS.DONE_STATE;
+            images[1].title = "copied screenshot capture";
+        });
+    });
+    
+    downloadImageBtn.addEventListener("click", async () => {
+        header.style.display = "none";
+    
+        exportToImage(async(dataUrl) => {
+            var element = document.createElement("a");
+            element.setAttribute("href", dataUrl);
+            element.setAttribute("download", `${currentExportName}.png`);
+            element.style.display = "none";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+    
+            header.style.display = "flex";
+            images[2].src = ICONS.DONE_STATE;
+            images[2].title = "downloaded image";
+        });
+    }, false);
+    
+    // voice recognition
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 
-// voice recognition
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    
+    recognition.onresult = (event) => {
+        const result = event.results[event.resultIndex][0].transcript;
+        noteInput.value += result;
+    };
+    
+    recognition.onerror = (event) => {
+        alert('Speech recognition error. Please try again.', event.error);
+    };
+    
+    voiceToTextBtn.addEventListener('click', () => {
 
-recognition.continuous = true;
-recognition.interimResults = true;
-
-recognition.onresult = (event) => {
-    const result = event.results[event.resultIndex][0].transcript;
-    noteInput.value += result;
-};
-
-recognition.onerror = (event) => {
-    alert('Speech recognition error. Please try again.', event.error);
-};
-
-voiceToTextBtn.addEventListener('click', () => {
-    var permission = navigator.permissions.query({name: 'microphone'});
-    permission.then((permissionStatus) => {
-        if (permissionStatus.state == "denied" || permissionStatus.state == "prompt") {
-            const enableMicString = "Microphone access denied. Please allow microphone access in your browser settings.\n\n* Step 1: Right click on the Notix extension icon\n* Step 2: Choose View web permission option\n* Step 3: Change microphone selection to Allow";
-            alert(enableMicString);
-        }
-        if (permissionStatus.state == "granted") {
-            navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
-                recognition.start();
-                let button = document.querySelector("#voice_to_text > img");
-                button.src = ICONS.RECORDING_STATE;
-                button.title = "recording";
-                noteInput.value += " ";
-
-                button.addEventListener('click', () => {
-                    recognition.stop();
-                    saveData();
-                    button.src = ICONS.MICROPHONE_STATE;
-                    button.title = "voice to text";
+        var permission = navigator.permissions.query({name: 'microphone'});
+        permission.then((permissionStatus) => {
+            if (permissionStatus.state == "denied" || permissionStatus.state == "prompt") {
+                const enableMicString = "Microphone access denied. Please allow microphone access in your browser settings.\n\n* Step 1: Right click on the Notix extension icon\n* Step 2: Choose View web permission option\n* Step 3: Change microphone selection to Allow";
+                alert(enableMicString);
+            }
+            if (permissionStatus.state == "granted") {
+                navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
+                    recognition.start();
+                    let button = document.querySelector("#voice_to_text > img");
+                    button.src = ICONS.RECORDING_STATE;
+                    button.title = "recording";
+                    noteInput.value += " ";
+    
+                    button.addEventListener('click', () => {
+                        recognition.stop();
+                        saveData();
+                        button.src = ICONS.MICROPHONE_STATE;
+                        button.title = "voice to text";
+                    });
+                }).catch((error) => {
+                    console.error('Error accessing the microphone:', error);
                 });
-            }).catch((error) => {
-                console.error('Error accessing the microphone:', error);
-                alert('Microphone access denied. Please allow microphone access in your browser settings.');
-            });
-        }
+            }
+        });
     });
-});
+}
+
+initNoteDOM();

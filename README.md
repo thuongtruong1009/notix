@@ -4,7 +4,7 @@
   <img alt="GitHub release" src="https://img.shields.io/github/v/release/thuongtruong1009/notix?color=yellow">
   <img src="https://img.shields.io/badge/manifest-v3-pink" alt="manifest_version_badge" />
   <a href="LICENSE"><img src="https://img.shields.io/github/license/thuongtruong1009/notix" alt="license_badge" /></a>
-  <a href="https://hits.dwyl.com/thuongtruong1009/notix" rel="nofollow"><img src="https://hits.dwyl.com/thuongtruong1009/notix.svg" alt="HitCount" data-canonical-src="https://hits.dwyl.com/thuongtruong1009/notix.svg" style="max-width: 100%;border-radius: 3px"></a>
+  <a href="https://hits.dwyl.com/thuongtruong1009/notix" rel="nofollow"><img src="https://hits.dwyl.com/thuongtruong1009/notix.svg" alt="HitCount" data-canonical-src="https://hits.dwyl.com/thuongtruong1009/notix.svg" style="max-width: 100%;></a>
 
 <img src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/favicon.ico" width="28" height="28" /> $\huge\textcolor{purple}{\text{Notix}}$
 
@@ -27,6 +27,7 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 -   Create new notes, edit note data, delete selected notes, clear text, and dispatch notes data with unlimited storage time
 -   Copy note as text, image to the clipboard
 -   Export/download notes data as .txt files, .png images
+-   Voice to text (only English)
 -   Auto save typed note text
 -   Not reset data when closing the browser
 -   Display notes information (total notes, name - size - total words - total lines - last update time of current note, etc.)
@@ -35,7 +36,7 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 
 ## 🎯 Todo
 
--   [ ] Voice to text, listening audio reading text
+-   [ ] Audio reading text
 -   [ ] Scroll to top button
 -   [ ] Search notes by name
 -   [ ] Setting options (dark mode, font color, font size, popup size, autosave-time, transition effects, current version etc.)

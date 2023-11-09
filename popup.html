@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#ffffff">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="popup.css">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="stylesheet" href="./popup.css">
     <meta name="author" content="Tran Nguyen Nguyen Thuong Truong">
     <meta name="description" content="Notix">
 </head>
@@ -17,53 +17,65 @@
     <main>
         <header>
             <nav id="logo">
-                <img src="/icons/icon32.png" alt="logo" width="24" height="24">
+                <img src="./icons/icon32.png" alt="logo" width="24" height="24">
                 <h2>Notix</h2>
             </nav>
             <div id="home">
-                <img src="/icons/home.svg" alt="home_icon" title="home">
+                <img src="./icons/home.svg" alt="home_icon" title="home">
             </div>
             <div id="list_header">
                 <h3>Total:<span id="total">0</span></h3>
                 <button class="disabled" id="delete_btn" type="button">
-                    <img src="/icons/delete.svg" alt="delete_icon" title="delete">
+                    <img src="./icons/delete.svg" alt="delete_icon" title="delete">
                     <h5>Delete</h5>
                 </button>
                 <button id="new_btn" type="button">
-                    <img src="/icons/new.png" alt="new_icon" title="new">
+                    <img src="./icons/new.png" alt="new_icon" title="new">
                     <h5>New</h5>
                 </button>
             </div>
-            <p id="note_name"></p>
             <ul id="note_header">
                 <li id="clear" title="clear">
-                    <img src="/icons/clear.png" alt="clear_icon" title="clear">
+                    <img src="./icons/clear.png" alt="clear_icon" title="clear">
                 </li>
                 <li id="capture" title="copy screenshot capture">
-                    <img src="/icons/capture.png" alt="capture_icon" title="copy screenshot capture">
+                    <img src="./icons/capture.png" alt="capture_icon" title="copy screenshot capture">
                 </li>
                 <li id="download_img" title="export as image">
-                    <img src="/icons/download_image.png" alt="export_img_icon" title="export as image">
+                    <img src="./icons/download_image.png" alt="export_img_icon" title="export as image">
                 </li>
                 <li id="download_text" title="export as text">
-                    <img src="/icons/download_text.png" alt="export_text_icon" title="export as text">
+                    <img src="./icons/download_text.png" alt="export_text_icon" title="export as text">
                 </li>
                 <li id="copy_text" title="copy text">
-                    <img src="/icons/copy.svg" alt="copy_text_icon" title="copy text">
+                    <img src="./icons/copy.svg" alt="copy_text_icon" title="copy text">
                 </li>
                 <li id="save" title="save">
-                    <img src="/icons/save.svg" alt="save_icon" title="save">
+                    <img src="./icons/save.svg" alt="save_icon" title="save">
                 </li>
             </ul>
         </header>
+
         <section id="list_panel">
             <ul></ul>
         </section>
+
+        <div class="note_head_panel">
+            <p>
+                <span id="note_name"></span>
+            </p>
+            <ul id="note_control">
+                <li id="voice_to_text" title="voice to text">
+                    <img src="./icons/microphone.png" alt="voice_to_text" title="voice to text">
+                </li>
+            </ul>
+        </div>
         <section id="note_panel">
             <div>
                 <textarea id="note"></textarea>
             </div>
         </section>
+
         <div id="note_info">
             <p>
                 <span>Total lines:</span>
@@ -83,19 +95,19 @@
             </p>
         </div>
 
-        <ul id="note_control">
+        <!-- <ul id="note_control">
             <li id="voice_to_text" title="voice to text">
-                <img src="/icons/microphone.png" alt="voice_to_text" title="voice to text">
+                <img src="./icons/microphone.png" alt="voice_to_text" title="voice to text">
             </li>
-        </ul>
+        </ul> -->
     </main>
 
     <!-- <p><button type="button" id="start-btn">Speech to Text</button> &nbsp; <span id="action"></span></p>
         <div id="output"></div> -->
         
-    <script src="popup.js"></script>
-    <script src="scripts/voice_to_text.js"></script>
-    <script src="scripts/domtoimg.js"></script>
+    <script src="./popup.js"></script>
+    <script src="./scripts/voice_to_text.js"></script>
+    <script src="./scripts/domtoimg.js"></script>
 </body>
 
 </html>
