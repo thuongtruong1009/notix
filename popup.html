@@ -33,8 +33,15 @@
                     <img src="./icons/new.png" alt="new_icon" title="new">
                     <h5>New</h5>
                 </button>
+                <button id="search_btn" type="button">
+                    <img src="./icons/search.svg" alt="search_icon" title="search">
+                    <h5>Search</h5>
+                </button>
             </div>
             <ul id="note_header">
+                <li id="settings" title="settings">
+                    <img src="./icons/settings.png" alt="settings_icon" title="settings">
+                </li>
                 <li id="clear" title="clear">
                     <img src="./icons/clear.png" alt="clear_icon" title="clear">
                 </li>
@@ -65,8 +72,11 @@
                 <span id="note_name"></span>
             </p>
             <ul id="note_control">
-                <li id="voice_to_text" title="voice to text">
-                    <img src="./icons/microphone.png" alt="voice_to_text" title="voice to text">
+                <li title="audio text">
+                    <img id="audio_text" src="./icons/mute.png" alt="audio_text" title="audio text">
+                </li>
+                <li title="voice text">
+                    <img id="voice_text" src="./icons/voice.png" alt="voice_text" title="voice text">
                 </li>
             </ul>
         </div>
@@ -94,18 +104,23 @@
                 <span id="last_update">0</span>
             </p>
         </div>
-
-        <!-- <ul id="note_control">
-            <li id="voice_to_text" title="voice to text">
-                <img src="./icons/microphone.png" alt="voice_to_text" title="voice to text">
-            </li>
-        </ul> -->
     </main>
+
+    <section id="modal">
+        <div class="settings_header">
+            <h3>Notix settings</h3>
+            <button id="close_settings" type="button" title="close settings">
+                <img src="./icons/close.svg" alt="close_settings">
+            </button>
+        </div>
+        <p>this is settings</p>
+    </section>
 
     <!-- <p><button type="button" id="start-btn">Speech to Text</button> &nbsp; <span id="action"></span></p>
         <div id="output"></div> -->
         
     <script src="./popup.js"></script>
+    <script src="./scripts/settings.js"></script>
     <script src="./scripts/voice_to_text.js"></script>
     <script src="./scripts/domtoimg.js"></script>
 </body>

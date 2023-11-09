@@ -25,6 +25,7 @@
   "web_accessible_resources": [
     {
       "resources": [
+        "scripts/settings.js",
         "scripts/domtoimg.js",
         "scripts/voice_to_text.js"
       ],

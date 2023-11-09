@@ -20,6 +20,7 @@ let deleteBtn = document.querySelector('#list_header > #delete_btn');
 let newBtn = document.querySelector('#list_header > #new_btn');
 
 let noteInput = document.getElementById("note");
+let settingsBtn = document.getElementById('settings');
 let clearBtn = document.getElementById("clear");
 let captureBtn = document.getElementById("capture");
 let downloadImageBtn = document.getElementById("download_img");
@@ -34,7 +35,9 @@ let noteTotalWords = document.getElementById("total_words");
 let noteTotalSize = document.getElementById("total_size");
 let noteLastUpdate = document.getElementById("last_update");
 
-let voiceToTextBtn = document.getElementById("voice_to_text");
+let voiceTextBtn = document.getElementById("voice_text");
+let audioTextBtn = document.getElementById("audio_text");
+let modal = document.getElementById('modal');
 
 const ICONS = {
     SAVE_STATE: "./icons/save.svg",
@@ -46,8 +49,10 @@ const ICONS = {
     EDIT_STATE: "./icons/edit.svg",
     CANCEL_STATE: "./icons/cancel.svg",
     CAPTURE_STATE: "./icons/capture.png",
-    MICROPHONE_STATE: "./icons/microphone.png",
-    RECORDING_STATE: "./icons/recording.png"
+    VOICE_STATE: "./icons/voice.png",
+    RECORDING_STATE: "./icons/recording.png",
+    AUDIO_STATE: "./icons/audio.png",
+    MUTE_STATE: "./icons/mute.png"
 };
 
 const OBJ_KEYS = {
@@ -241,6 +246,10 @@ const loadNotesList = () => {
 
 const initListDOM = () => {
     loadNotesList();
+
+    settingsBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+    });
 
     newBtn.addEventListener('click', () => {
         let newData = {
@@ -469,8 +478,7 @@ const initNoteDOM = () => {
         alert('Speech recognition error. Please try again.', event.error);
     };
     
-    voiceToTextBtn.addEventListener('click', () => {
-
+    voiceTextBtn.addEventListener('click', () => {
         var permission = navigator.permissions.query({name: 'microphone'});
         permission.then((permissionStatus) => {
             if (permissionStatus.state == "denied" || permissionStatus.state == "prompt") {
@@ -480,22 +488,42 @@ const initNoteDOM = () => {
             if (permissionStatus.state == "granted") {
                 navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
                     recognition.start();
-                    let button = document.querySelector("#voice_to_text > img");
-                    button.src = ICONS.RECORDING_STATE;
-                    button.title = "recording";
+                    // let button = document.querySelector("#voice_to_text > img");
+                    voiceTextBtn.src = ICONS.RECORDING_STATE;
+                    voiceTextBtn.title = "recording";
                     noteInput.value += " ";
     
-                    button.addEventListener('click', () => {
+                    voiceTextBtn.addEventListener('click', () => {
                         recognition.stop();
                         saveData();
-                        button.src = ICONS.MICROPHONE_STATE;
-                        button.title = "voice to text";
+                        voiceTextBtn.src = ICONS.VOICE_STATE;
+                        voiceTextBtn.title = "voice to text";
                     });
                 }).catch((error) => {
                     console.error('Error accessing the microphone:', error);
                 });
             }
         });
+    });
+
+    
+    audioTextBtn.addEventListener('click', () => {
+        if ("speechSynthesis" in window) {        
+            audioTextBtn.src = ICONS.AUDIO_STATE;
+            audioTextBtn.title = "reading_text";
+
+            let msg = new SpeechSynthesisUtterance();
+            msg.voice = speechSynthesis.getVoices()[0];
+            msg.text = noteInput.value;
+            msg.volume = +1;
+            msg.pitch = +1;
+            msg.rate = +1;
+            speechSynthesis.speak(msg);
+
+            audioTextBtn.src = ICONS.MUTE_STATE;
+            audioTextBtn.title = "audio text";
+            return false;
+        }
     });
 }
 

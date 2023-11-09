@@ -92,7 +92,8 @@ header > nav > h2 {
 
 header #home,
 header #note_header > li,
-header #list_header > button {
+header #list_header > button,
+#modal .settings_header button {
     border-radius: 0.5rem;
     cursor: pointer;
     font-size: 14px;
@@ -102,7 +103,8 @@ header #list_header > button {
 
 header #home:hover,
 header #note_header > li:hover,
-header #list_header > button:hover {
+header #list_header > button:hover,
+#modal .settings_header button:hover {
     box-shadow: inset 0px -6px 10px white,
         inset 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
@@ -120,7 +122,8 @@ header #list_header > h3 #total {
 header #home img,
 header ul > li > img,
 header button > img,
-main #note_control img {
+main #note_control img,
+#modal .settings_header button img {
     width: 1rem;
     height: 1rem;
 }
@@ -152,7 +155,7 @@ main > #note_panel:hover {
 }
 
 main > .note_head_panel {
-    transform: translateY(0.24rem);
+    transform: translateY(0.22rem);
     margin-top: 0.5rem;
     z-index: 2;
     width: 100%;
@@ -185,7 +188,8 @@ main > .note_head_panel > p::before {
 }
 
 main > .note_head_panel #note_name {
-    min-width: fit-content;
+    width: fit-content;
+    max-width: 100%;
 }
 
 main > #note_panel > div {
@@ -290,14 +294,13 @@ main > #list_panel > ul > li:hover button:after {
     transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
-main #note_name,
+main .note_head_panel #note_name,
 main > #list_panel > ul > li button .note_title,
 main > #list_panel > ul > li button input[type='text'] {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
-    max-width: 85%;
 }
 
 main > #list_panel > ul > li button input[type='text'] {
@@ -537,7 +540,30 @@ main #note_control {
 }
 
 main #note_control li {
-    margin-left: 0.5rem;
+    margin-left: 0.75rem;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+}
+
+#modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: #eaeaea;
+    padding: 0.5rem;
+    transition: all 0.2s ease-in-out;
+    z-index: -1;
+}
+
+#modal.active {
+    width: 100%;
+    z-index: 3;
+}
+
+#modal .settings_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
