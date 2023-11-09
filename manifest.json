@@ -21,5 +21,16 @@
     },
     "default_popup": "popup.html",
     "default_title": "Notix"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "scripts/domtoimg.js",
+        "scripts/voice_to_text.js"
+      ],
+      "matches": [
+        "*://*/*"
+      ]
+    }
+  ]
 }
