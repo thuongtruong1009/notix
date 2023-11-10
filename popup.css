@@ -155,7 +155,7 @@ main > #note_panel:hover {
 }
 
 main > .note_head_panel {
-    transform: translateY(0.22rem);
+    transform: translateY(0.2rem);
     margin-top: 0.5rem;
     z-index: 2;
     width: 100%;
@@ -168,8 +168,8 @@ main > .note_head_panel {
 
 main > .note_head_panel > p {
     padding: 0.25rem 0.5rem;
-    border-top-left-radius: 0.3rem;
-    border-top-right-radius: 0.3rem;
+    border-top-left-radius: 0.35rem;
+    border-top-right-radius: 0.35rem;
     background-color: #eaeaea;
     box-shadow: inset 3px 3px 4px #d1d9e6, inset -1px -1px 1px #d1d9e6;
     position: relative;

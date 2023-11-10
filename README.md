@@ -27,7 +27,9 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 -   Create new notes, edit note data, delete selected notes, clear text, and dispatch notes data with unlimited storage time
 -   Copy note as text, image to the clipboard
 -   Export/download notes data as .txt files, .png images
+-   Share note via image link
 -   Voice to text (only English)
+-   Audio reading text
 -   Auto save typed note text
 -   Not reset data when closing the browser
 -   Display notes information (total notes, name - size - total words - total lines - last update time of current note, etc.)
@@ -36,12 +38,11 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 
 ## 🎯 Todo
 
--   [ ] Audio reading text
 -   [ ] Scroll to top button
 -   [ ] Search notes by name
+-   [ ] Detect language translation of note text
 -   [ ] Setting options (dark mode, font color, font size, popup size, autosave-time, transition effects, current version etc.)
--   [ ] Share notes by link
--   [ ] Edit tool panel
+-   [ ] Text editor tool panel
 -   [ ] Add more languages (English, Vietnamese, etc.)
 
 ## 🧩 Built With

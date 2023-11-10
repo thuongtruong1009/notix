@@ -22,6 +22,7 @@ let newBtn = document.querySelector('#list_header > #new_btn');
 let noteInput = document.getElementById("note");
 let settingsBtn = document.getElementById('settings');
 let clearBtn = document.getElementById("clear");
+let copyLinkBtn = document.getElementById("copy_link");
 let captureBtn = document.getElementById("capture");
 let downloadImageBtn = document.getElementById("download_img");
 let downloadTextBtn = document.getElementById("download_text");
@@ -35,6 +36,7 @@ let noteTotalWords = document.getElementById("total_words");
 let noteTotalSize = document.getElementById("total_size");
 let noteLastUpdate = document.getElementById("last_update");
 
+let noteInformation = document.getElementById("note_information");
 let voiceTextBtn = document.getElementById("voice_text");
 let audioTextBtn = document.getElementById("audio_text");
 let modal = document.getElementById('modal');
@@ -44,6 +46,7 @@ const ICONS = {
     DONE_STATE: "./icons/tick.svg",
     COPY_STATE: "./icons/copy.svg",
     CLEAR_STATE: "./icons/clear.png",
+    COPY_LINK_STATE: "./icons/link.png",
     DOWNLOAD_IMG_STATE: "./icons/download_image.png",
     DOWNLOAD_TEXT_STATE: "./icons/download_text.png",
     EDIT_STATE: "./icons/edit.svg",
@@ -428,9 +431,25 @@ const initNoteDOM = () => {
     //         }
     //     }
     // };
+
+    copyLinkBtn.addEventListener("click", () => {
+        header.style.display = "none";
+        notePanelHeader.style.display = "none";
+        exportToImage(async(dataUrl) => {
+            navigator.clipboard.writeText(dataUrl).then(() => {
+                header.style.display = "flex";
+                notePanelHeader.style.display = "flex";
+                images[2].src = ICONS.DONE_STATE;
+                images[2].title = "copied link";
+            }, () => {
+                alert("Error when copying to clipboard");
+            });
+        });
+    });
     
     captureBtn.addEventListener("click", async () => {
         header.style.display = "none";
+        notePanelHeader.style.display = "none";
     
         exportToImage(async(dataUrl) => {
             await navigator.clipboard.write([
@@ -440,6 +459,7 @@ const initNoteDOM = () => {
             ]);
     
             header.style.display = "flex";
+            notePanelHeader.style.display = "flex";
             images[1].src = ICONS.DONE_STATE;
             images[1].title = "copied screenshot capture";
         });
@@ -447,6 +467,7 @@ const initNoteDOM = () => {
     
     downloadImageBtn.addEventListener("click", async () => {
         header.style.display = "none";
+        notePanelHeader.style.display = "none";
     
         exportToImage(async(dataUrl) => {
             var element = document.createElement("a");
@@ -458,10 +479,47 @@ const initNoteDOM = () => {
             document.body.removeChild(element);
     
             header.style.display = "flex";
+            notePanelHeader.style.display = "flex";
             images[2].src = ICONS.DONE_STATE;
             images[2].title = "downloaded image";
         });
     }, false);
+
+    // note information
+    noteInformation.addEventListener('click', () => {
+        // modal.classList.add('active');
+        alert("Coming soon!");
+    });
+
+    // audio text
+    let isAudioReading = false;
+    let msg = new SpeechSynthesisUtterance();
+
+    const turnOffAudio = () => {
+        speechSynthesis.cancel();
+        isAudioReading = false;
+        audioTextBtn.src = ICONS.MUTE_STATE;
+        audioTextBtn.title = "muted audio";
+    }
+    
+    const turnOnAudio = () => {
+        if ("speechSynthesis" in window) {
+            isAudioReading = true;
+            audioTextBtn.src = ICONS.AUDIO_STATE;
+            audioTextBtn.title = "audio text";
+            msg.voice = speechSynthesis.getVoices()[0];
+            msg.text = noteInput.value;
+            msg.volume = +1;
+            msg.pitch = +1;
+            msg.rate = +1;
+            speechSynthesis.speak(msg);
+            return false;
+        }
+    }
+    
+    audioTextBtn.addEventListener('click', async () => {
+        isAudioReading ? turnOffAudio() : turnOnAudio();
+    });
     
     // voice recognition
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -504,26 +562,6 @@ const initNoteDOM = () => {
                 });
             }
         });
-    });
-
-    
-    audioTextBtn.addEventListener('click', () => {
-        if ("speechSynthesis" in window) {        
-            audioTextBtn.src = ICONS.AUDIO_STATE;
-            audioTextBtn.title = "reading_text";
-
-            let msg = new SpeechSynthesisUtterance();
-            msg.voice = speechSynthesis.getVoices()[0];
-            msg.text = noteInput.value;
-            msg.volume = +1;
-            msg.pitch = +1;
-            msg.rate = +1;
-            speechSynthesis.speak(msg);
-
-            audioTextBtn.src = ICONS.MUTE_STATE;
-            audioTextBtn.title = "audio text";
-            return false;
-        }
     });
 }
 
