@@ -1,0 +1,67 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    user-select: none;
+}
+
+header .disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+header > nav,
+header #list_header h3,
+header #list_header button {
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+}
+
+header > nav > h2 {
+    margin-left: 0.2rem;
+    background: -webkit-linear-gradient(30deg, #130ac1, #00c472 80%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header #home,
+header #note_header > li,
+header #list_header > button,
+#settings .settings_header button {
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0.25rem 0.5rem;
+    box-shadow: 0px -6px 10px white, 0px 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+header #home:hover,
+header #note_header > li:hover,
+header #list_header > button:hover,
+#settings .settings_header button:hover {
+    box-shadow: inset 0px -6px 10px white,
+        inset 0px 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+header #note_header > li,
+header #list_header > button {
+    margin-left: 0.75rem;
+}
+
+header #list_header button h5,
+header #list_header > h3 #total {
+    margin-left: 0.25rem;
+}
+
+header #home img,
+header ul > li > img,
+header button > img,
+main #note_control img,
+#settings .settings_header button img {
+    width: 1rem;
+    height: 1rem;
+}

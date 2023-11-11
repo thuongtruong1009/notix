@@ -25,9 +25,10 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "scripts/settings.js",
-        "scripts/domtoimg.js",
-        "scripts/voice_to_text.js"
+        "modules/scripts/settings.js",
+        "modules/scripts/voice_to_text.js",
+        "modules/scripts/variables.js",
+        "modules/third-party/domtoimg.js"
       ],
       "matches": [
         "*://*/*"

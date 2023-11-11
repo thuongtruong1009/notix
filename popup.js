@@ -35,30 +35,15 @@ let voiceTextBtn = document.getElementById("voice_text");
 let audioTextBtn = document.getElementById("audio_text");
 let settings = document.getElementById('settings');
 
-const ICONS = {
-    SAVE_STATE: "./icons/save.svg",
-    DONE_STATE: "./icons/tick.svg",
-    COPY_STATE: "./icons/copy.svg",
-    CLEAR_STATE: "./icons/clear.png",
-    COPY_LINK_STATE: "./icons/link.png",
-    DOWNLOAD_IMG_STATE: "./icons/download_image.png",
-    DOWNLOAD_TEXT_STATE: "./icons/download_text.png",
-    EDIT_STATE: "./icons/edit.svg",
-    CANCEL_STATE: "./icons/cancel.svg",
-    CAPTURE_STATE: "./icons/capture.png",
-    VOICE_STATE: "./icons/voice.png",
-    RECORDING_STATE: "./icons/recording.png",
-    AUDIO_STATE: "./icons/audio.png",
-    MUTE_STATE: "./icons/mute.png"
-};
+let ICONS = {};
+let OBJ_KEYS = {};
 
-const OBJ_KEYS = {
-    NOTE: "note",
-    LIST: "list",
-    TAB: "tab",
-    ITEMS: "items",
-    CURRENT_DATA: "current_data"
-};
+(async () => {
+    const src = chrome.runtime.getURL("./modules/scripts/variables.js");
+    const contentMain = await import(src);
+    ICONS = contentMain.ICONS;
+    OBJ_KEYS = contentMain.OBJ_KEYS;
+})();
 
 const tabListStyle = () => {
     listHeader.style.display = "flex";
@@ -239,11 +224,11 @@ const loadNotesList = () => {
     });
 }
 
-const initListDOM = () => {
+(async () => {
     loadNotesList();
 
     settingsBtn.onclick = () => {
-        settings.classList.add('active');
+        settings.classList.add(OBJ_KEYS.ACTIVE_CLASS);
     };
 
     newBtn.onclick = () => {
@@ -259,9 +244,7 @@ const initListDOM = () => {
     
         list.appendChild(createNewNote(newData.id, newData.title));
     };
-}
-
-initListDOM();
+})();
 
 // **************** note tab ****************
 
@@ -321,7 +304,7 @@ const exportToImage = (cb) => {
     });
 }
 
-const initNoteDOM = () => {
+(() => {
     loadCurrentNoteData();
 
     notePanel.addEventListener('load', () => {
@@ -495,16 +478,16 @@ const initNoteDOM = () => {
         title.innerText = "Statistics";
 
         let modal = document.getElementById("modal");
-        modal.classList.add("active");
+        modal.classList.add(OBJ_KEYS.ACTIVE_CLASS);
 
         var closeBtn = document.getElementsByClassName("modal_btn--close")[0];
         closeBtn.onclick = () => {
-            modal.classList.remove("active");
+            modal.classList.remove(OBJ_KEYS.ACTIVE_CLASS);
         }
 
         window.onclick = (event) => {
             if (event.target == modal) {
-                modal.classList.remove("active");
+                modal.classList.remove(OBJ_KEYS.ACTIVE_CLASS);
             }
         }
     };
@@ -579,6 +562,4 @@ const initNoteDOM = () => {
             }
         });
     };
-}
-
-initNoteDOM();
+})();
