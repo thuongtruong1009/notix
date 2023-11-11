@@ -4,7 +4,7 @@
   "version": "2.0",
   "description": "A Chrome extension that helps in saving temporary notes",
   "author": "Tran Nguyen Thuong Truong",
-  "homepage_url": "https://github.com/thuongtruong1009/notix",
+  "homepage_url": "https://thuongtruong1009.github.io/notix",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -25,6 +25,7 @@
   "web_accessible_resources": [
     {
       "resources": [
+        "scripts/settings.js",
         "scripts/domtoimg.js",
         "scripts/voice_to_text.js"
       ],
@@ -32,5 +33,8 @@
         "*://*/*"
       ]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
 }

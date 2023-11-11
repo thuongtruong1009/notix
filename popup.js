@@ -20,7 +20,9 @@ let deleteBtn = document.querySelector('#list_header > #delete_btn');
 let newBtn = document.querySelector('#list_header > #new_btn');
 
 let noteInput = document.getElementById("note");
+let settingsBtn = document.getElementById('settings_btn');
 let clearBtn = document.getElementById("clear");
+let copyLinkBtn = document.getElementById("copy_link");
 let captureBtn = document.getElementById("capture");
 let downloadImageBtn = document.getElementById("download_img");
 let downloadTextBtn = document.getElementById("download_text");
@@ -28,26 +30,26 @@ let copyTextBtn = document.getElementById("copy_text");
 let saveBtn = document.getElementById("save");
 let images = document.querySelectorAll("#note_header > li > img");
 
-let noteInfo = document.getElementById("note_info");
-let noteTotalLines = document.getElementById("total_lines");
-let noteTotalWords = document.getElementById("total_words");
-let noteTotalSize = document.getElementById("total_size");
-let noteLastUpdate = document.getElementById("last_update");
-
-let voiceToTextBtn = document.getElementById("voice_to_text");
+let noteInformation = document.getElementById("note_information");
+let voiceTextBtn = document.getElementById("voice_text");
+let audioTextBtn = document.getElementById("audio_text");
+let settings = document.getElementById('settings');
 
 const ICONS = {
     SAVE_STATE: "./icons/save.svg",
     DONE_STATE: "./icons/tick.svg",
     COPY_STATE: "./icons/copy.svg",
     CLEAR_STATE: "./icons/clear.png",
+    COPY_LINK_STATE: "./icons/link.png",
     DOWNLOAD_IMG_STATE: "./icons/download_image.png",
     DOWNLOAD_TEXT_STATE: "./icons/download_text.png",
     EDIT_STATE: "./icons/edit.svg",
     CANCEL_STATE: "./icons/cancel.svg",
     CAPTURE_STATE: "./icons/capture.png",
-    MICROPHONE_STATE: "./icons/microphone.png",
-    RECORDING_STATE: "./icons/recording.png"
+    VOICE_STATE: "./icons/voice.png",
+    RECORDING_STATE: "./icons/recording.png",
+    AUDIO_STATE: "./icons/audio.png",
+    MUTE_STATE: "./icons/mute.png"
 };
 
 const OBJ_KEYS = {
@@ -66,7 +68,6 @@ const tabListStyle = () => {
     logo.style.display = "flex";
     homeBtn.style.display = "none";
     noteName.style.display = "none";
-    noteInfo.style.display = "none";
     notePanelHeader.style.display = "none";
 }
 
@@ -78,7 +79,6 @@ const tabNoteStyle = () => {
     logo.style.display = "none";
     homeBtn.style.display = "block";
     noteName.style.display = "inline-flex";
-    noteInfo.style.display = "flex";
     notePanelHeader.style.display = "flex";
 }
 
@@ -103,14 +103,14 @@ const dispatchNotesList = () => chrome.storage.sync.set({ items: notesList });
 const deleteSelectedNotes = () => {
     removesList.length > 0 ? deleteBtn.classList.remove('disabled') : deleteBtn.classList.add('disabled');
 
-    deleteBtn.addEventListener('click', () => {
+    deleteBtn.onclick = () => {
         for (let currentSelect of removesList) {
             list.removeChild(document.getElementById(currentSelect));
             notesList = notesList.filter((currentItem) => currentItem.id !== currentSelect);
         }
         dispatchNotesList();
         loadNotesList();
-    });
+    };
 }
 
 const updateNoteById = () => {
@@ -134,12 +134,12 @@ const createNewNote = (id, title) => {
     titleBtnSpan.classList.add('note_title');
     titleBtnSpan.innerText = title;
 
-    titleBtnSpan.addEventListener('click', async () => {
+    titleBtnSpan.onclick = async () => {
         let choice = await notesList.find(item => item.id === id);
         chrome.storage.sync.set({ current_data: choice});
         changeTab(OBJ_KEYS.NOTE);
         loadCurrentNoteData();
-    });
+    };
 
     titleBtn.appendChild(titleBtnSpan);
 
@@ -149,7 +149,7 @@ const createNewNote = (id, title) => {
     editBtn.setAttribute('title', 'edit');
     titleBtn.appendChild(editBtn);
 
-    editBtn.addEventListener('click', () => {
+    editBtn.onclick = () => {
         titleBtn.innerHTML = "";
         newItem.classList.add('choiced');
 
@@ -177,9 +177,9 @@ const createNewNote = (id, title) => {
             newItem.classList.remove('choiced');
         }
 
-        titleCancelEditBtn.addEventListener('click', () => {
+        titleCancelEditBtn.onclick = () => {
             cancelEdit();
-        });
+        };
 
         let titleEditDoneBtn = document.createElement('img');
         titleEditDoneBtn.setAttribute('src', ICONS.SAVE_STATE);
@@ -187,7 +187,7 @@ const createNewNote = (id, title) => {
         titleEditDoneBtn.setAttribute('title', 'done');
         titleBtn.appendChild(titleEditDoneBtn);
 
-        titleEditDoneBtn.addEventListener('click', async () => {
+        titleEditDoneBtn.onclick = async () => {
             title = titleEditInput.value;
             titleBtnSpan.innerText = title;
             notesList.map((item, index) => {
@@ -197,8 +197,8 @@ const createNewNote = (id, title) => {
             });
             await dispatchNotesList();
             cancelEdit();
-        });
-    });
+        };
+    };
 
     newItem.appendChild(titleBtn);
 
@@ -213,7 +213,7 @@ const createNewNote = (id, title) => {
     checkboxEffect.setAttribute('for', `checkbox_item_${id}`);
     newItem.appendChild(checkboxEffect);
 
-    checkboxItem.addEventListener('click', () => {
+    checkboxItem.onclick = () => {
         if (checkboxItem.checked === true) {
             removesList.push(id);
         } else {
@@ -221,7 +221,7 @@ const createNewNote = (id, title) => {
         }
 
         deleteSelectedNotes();
-    });
+    };
 
     return newItem;
 }
@@ -242,7 +242,11 @@ const loadNotesList = () => {
 const initListDOM = () => {
     loadNotesList();
 
-    newBtn.addEventListener('click', () => {
+    settingsBtn.onclick = () => {
+        settings.classList.add('active');
+    };
+
+    newBtn.onclick = () => {
         let newData = {
             id: Date.now(),
             title: Date.now(),
@@ -254,7 +258,7 @@ const initListDOM = () => {
         dispatchNotesList();
     
         list.appendChild(createNewNote(newData.id, newData.title));
-    });
+    };
 }
 
 initListDOM();
@@ -280,13 +284,6 @@ const calLastUpdate = (timestamp) => {
     return formattedDate;
 }
 
-const renderNoteInfo = () => {
-    noteTotalLines.innerText = noteInput.value === "" ?  0 : noteInput.value.split("\n").length;
-    noteTotalWords.innerText = noteInput.value.trim().split(/[\s]+/).length;
-    noteTotalSize.innerText = new Blob([noteInput.value]).size/1000 + " kb";
-    noteLastUpdate.innerText = calLastUpdate(currentNoteData.lastUpdate);
-}
-
 // const persistNoteBtnStyle = {
 //     unDone: (order) => {
 //         images[order].src = ICONS.SAVE_STATE;
@@ -310,8 +307,6 @@ const loadCurrentNoteData = () => {
             noteInput.value = data.current_data.content;
             currentNoteData = data.current_data;
             noteName.innerText = data.current_data.title;
-
-            renderNoteInfo();
             currentExportName = `notix_${data.current_data.title}`;
         }
     });
@@ -329,13 +324,13 @@ const exportToImage = (cb) => {
 const initNoteDOM = () => {
     loadCurrentNoteData();
 
-    notePanel.addEventListener('DOMContentLoaded', () => {
+    notePanel.addEventListener('load', () => {
         noteInput.scrollTop = noteInput.scrollHeight;
     });
     
-    homeBtn.addEventListener("click", () => {
+    homeBtn.onclick = () => {
         changeTab(OBJ_KEYS.LIST);
-    });
+    };
 
     const saveData = () => {
         currentNoteData.content = noteInput.value;
@@ -343,7 +338,6 @@ const initNoteDOM = () => {
     
         chrome.storage.sync.set({ current_data: currentNoteData}, () => {
             updateNoteById();
-            renderNoteInfo();
     
             images[5].src = ICONS.DONE_STATE;
             images[5].title = "saved";
@@ -356,18 +350,17 @@ const initNoteDOM = () => {
     
     }
     
-    saveBtn.addEventListener("click", () => {
+    saveBtn.onclick = () => {
         saveData();
-    });
+    };
     
     noteInput.addEventListener('input', () => {
-        // initNoteStyle();
         setTimeout(() => {
             saveData();
         }, 1000)
     });
     
-    clearBtn.addEventListener("click", () => {
+    clearBtn.onclick = () => {
         chrome.storage.sync.remove(OBJ_KEYS.CURRENT_DATA, () => {
             noteInput.value = "";
             currentNoteData.content = "";
@@ -375,9 +368,9 @@ const initNoteDOM = () => {
             updateNoteById();
             images[0].src = ICONS.DONE_STATE;
         });
-    });
+    };
     
-    downloadTextBtn.addEventListener("click", () => {
+    downloadTextBtn.onclick = () => {
         var element = document.createElement("a");
         element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(noteInput.value));
         element.setAttribute("download", `${currentExportName}.txt`);
@@ -390,9 +383,9 @@ const initNoteDOM = () => {
         document.body.removeChild(element);
         images[3].src = ICONS.DONE_STATE;
         images[3].title = "downloaded text";
-    }, false);
+    };
     
-    copyTextBtn.addEventListener("click", () => {
+    copyTextBtn.onclick = () => {
         let note = noteInput.value;
         navigator.clipboard.writeText(note).then(() => {
             images[4].src = ICONS.DONE_STATE;
@@ -400,7 +393,7 @@ const initNoteDOM = () => {
         }, () => {
             alert("Error when copying to clipboard");
         });
-    });
+    };
     
     // paste image to note
     
@@ -419,9 +412,25 @@ const initNoteDOM = () => {
     //         }
     //     }
     // };
-    
-    captureBtn.addEventListener("click", async () => {
+
+    copyLinkBtn.onclick = () => {
         header.style.display = "none";
+        notePanelHeader.style.display = "none";
+        exportToImage(async(dataUrl) => {
+            navigator.clipboard.writeText(dataUrl).then(() => {
+                header.style.display = "flex";
+                notePanelHeader.style.display = "flex";
+                images[2].src = ICONS.DONE_STATE;
+                images[2].title = "copied link";
+            }, () => {
+                alert("Error when copying to clipboard");
+            });
+        });
+    };
+    
+    captureBtn.onclick = async () => {
+        header.style.display = "none";
+        notePanelHeader.style.display = "none";
     
         exportToImage(async(dataUrl) => {
             await navigator.clipboard.write([
@@ -431,13 +440,15 @@ const initNoteDOM = () => {
             ]);
     
             header.style.display = "flex";
+            notePanelHeader.style.display = "flex";
             images[1].src = ICONS.DONE_STATE;
             images[1].title = "copied screenshot capture";
         });
-    });
+    };
     
-    downloadImageBtn.addEventListener("click", async () => {
+    downloadImageBtn.onclick = async () => {
         header.style.display = "none";
+        notePanelHeader.style.display = "none";
     
         exportToImage(async(dataUrl) => {
             var element = document.createElement("a");
@@ -449,10 +460,84 @@ const initNoteDOM = () => {
             document.body.removeChild(element);
     
             header.style.display = "flex";
+            notePanelHeader.style.display = "flex";
             images[2].src = ICONS.DONE_STATE;
             images[2].title = "downloaded image";
         });
-    }, false);
+    };
+
+    // note information
+    noteInformation.onclick = async () => {
+        let totalLines = noteInput.value === "" ?  0 : noteInput.value.split("\n").length;
+        let totalWords = noteInput.value.trim().split(/[\s]+/).length;
+        let totalSizes = new Blob([noteInput.value]).size/1000 + " kb";
+        let lastUpdate = calLastUpdate(currentNoteData.lastUpdate);
+
+        let modalContent = document.getElementById("modal_content");
+
+        let totalLinesLi = document.createElement("li");
+        totalLinesLi.innerText = `Total lines: ${totalLines}`;
+        modalContent.appendChild(totalLinesLi);
+
+        let totalWordsLi = document.createElement("li");
+        totalWordsLi.innerText = `Total words: ${totalWords}`;
+        modalContent.appendChild(totalWordsLi);
+
+        let totalSizesLi = document.createElement("li");
+        totalSizesLi.innerText = `Total size: ${totalSizes}`;
+        modalContent.appendChild(totalSizesLi);
+
+        let lastUpdateLi = document.createElement("li");
+        lastUpdateLi.innerText = `Last update: ${lastUpdate}`;
+        modalContent.appendChild(lastUpdateLi);
+
+        let title = document.getElementById("modal_title");
+        title.innerText = "Statistics";
+
+        let modal = document.getElementById("modal");
+        modal.classList.add("active");
+
+        var closeBtn = document.getElementsByClassName("modal_btn--close")[0];
+        closeBtn.onclick = () => {
+            modal.classList.remove("active");
+        }
+
+        window.onclick = (event) => {
+            if (event.target == modal) {
+                modal.classList.remove("active");
+            }
+        }
+    };
+
+    // audio text
+    let isAudioReading = false;
+    let msg = new SpeechSynthesisUtterance();
+
+    const turnOffAudio = () => {
+        speechSynthesis.cancel();
+        isAudioReading = false;
+        audioTextBtn.src = ICONS.MUTE_STATE;
+        audioTextBtn.title = "muted audio";
+    }
+    
+    const turnOnAudio = () => {
+        if ("speechSynthesis" in window) {
+            isAudioReading = true;
+            audioTextBtn.src = ICONS.AUDIO_STATE;
+            audioTextBtn.title = "audio text";
+            msg.voice = speechSynthesis.getVoices()[0];
+            msg.text = noteInput.value;
+            msg.volume = +1;
+            msg.pitch = +1;
+            msg.rate = +1;
+            speechSynthesis.speak(msg);
+            return false;
+        }
+    }
+    
+    audioTextBtn.onclick =  () => {
+        isAudioReading ? turnOffAudio() : turnOnAudio();
+    };
     
     // voice recognition
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -469,34 +554,31 @@ const initNoteDOM = () => {
         alert('Speech recognition error. Please try again.', event.error);
     };
     
-    voiceToTextBtn.addEventListener('click', () => {
-
+    voiceTextBtn.onclick = () => {
         var permission = navigator.permissions.query({name: 'microphone'});
         permission.then((permissionStatus) => {
-            if (permissionStatus.state == "denied" || permissionStatus.state == "prompt") {
-                const enableMicString = "Microphone access denied. Please allow microphone access in your browser settings.\n\n* Step 1: Right click on the Notix extension icon\n* Step 2: Choose View web permission option\n* Step 3: Change microphone selection to Allow";
-                alert(enableMicString);
-            }
             if (permissionStatus.state == "granted") {
                 navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
                     recognition.start();
-                    let button = document.querySelector("#voice_to_text > img");
-                    button.src = ICONS.RECORDING_STATE;
-                    button.title = "recording";
+                    voiceTextBtn.src = ICONS.RECORDING_STATE;
+                    voiceTextBtn.title = "recording";
                     noteInput.value += " ";
     
-                    button.addEventListener('click', () => {
+                    voiceTextBtn.onclick = () => {
                         recognition.stop();
                         saveData();
-                        button.src = ICONS.MICROPHONE_STATE;
-                        button.title = "voice to text";
-                    });
+                        voiceTextBtn.src = ICONS.VOICE_STATE;
+                        voiceTextBtn.title = "voice to text";
+                    };
                 }).catch((error) => {
                     console.error('Error accessing the microphone:', error);
                 });
+            } else {
+                const enableMicString = "Microphone access denied. Please allow microphone access in your browser settings.\n\n* Step 1: Right click on the Notix extension icon\n* Step 2: Choose View web permission option\n* Step 3: Change microphone selection to Allow";
+                alert(enableMicString);
             }
         });
-    });
+    };
 }
 
 initNoteDOM();
