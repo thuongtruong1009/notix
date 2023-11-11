@@ -1,6 +1,6 @@
-let closeBtn = document.querySelector('#modal #close_settings');
+let closeBtn = document.querySelector('#settings #close_settings');
 
 closeBtn.addEventListener('click', () => {
-    let modal = document.getElementById('modal');
-    modal.classList.remove('active');
+    let settings = document.getElementById('settings');
+    settings.classList.remove('active');
 })

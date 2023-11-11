@@ -56,7 +56,6 @@ main {
     justify-content: center;
     background-color: #eaeaea;
     padding: 0.8rem;
-    padding-bottom: 0.3rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -93,7 +92,7 @@ header > nav > h2 {
 header #home,
 header #note_header > li,
 header #list_header > button,
-#modal .settings_header button {
+#settings .settings_header button {
     border-radius: 0.5rem;
     cursor: pointer;
     font-size: 14px;
@@ -104,7 +103,7 @@ header #list_header > button,
 header #home:hover,
 header #note_header > li:hover,
 header #list_header > button:hover,
-#modal .settings_header button:hover {
+#settings .settings_header button:hover {
     box-shadow: inset 0px -6px 10px white,
         inset 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
@@ -123,7 +122,7 @@ header #home img,
 header ul > li > img,
 header button > img,
 main #note_control img,
-#modal .settings_header button img {
+#settings .settings_header button img {
     width: 1rem;
     height: 1rem;
 }
@@ -157,7 +156,7 @@ main > #note_panel:hover {
 main > .note_head_panel {
     transform: translateY(0.2rem);
     margin-top: 0.5rem;
-    z-index: 2;
+    z-index: 1;
     width: 100%;
     height: auto;
     justify-content: space-between;
@@ -183,7 +182,7 @@ main > .note_head_panel > p::before {
     left: 0.25rem;
     width: calc(100% - 0.4rem);
     height: 0.75rem;
-    z-index: 3;
+    z-index: 2;
     background-color: #eaeaea;
 }
 
@@ -501,36 +500,6 @@ main > #list_panel > ul > li .checkbox_item:checked + label::after {
     }
 }
 
-/* information */
-main > #note_info {
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-top: 0.5rem;
-    opacity: 0.8;
-    font-size: 0.9em;
-}
-
-main > #note_info p {
-    display: flex;
-    align-items: center;
-    margin: 0 0.5rem;
-}
-
-main > #note_info p:first-child {
-    margin-left: 0;
-}
-
-main > #note_info p:last-child {
-    margin-right: 0;
-}
-
-main > #note_info p span:nth-child(1) {
-    margin-right: 0.2rem;
-}
-
-/* note control */
-
 main #note_control {
     display: flex;
     justify-content: flex-end;
@@ -545,7 +514,7 @@ main #note_control li {
     transition: all 0.2s ease-in-out;
 }
 
-#modal {
+#settings {
     position: fixed;
     top: 0;
     left: 0;
@@ -557,13 +526,70 @@ main #note_control li {
     z-index: -1;
 }
 
-#modal.active {
+#settings.active {
     width: 100%;
     z-index: 3;
 }
 
-#modal .settings_header {
+#settings .settings_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+/* modal */
+.modal {
+    position: fixed;
+    z-index: -1;
+    opacity: 0;
+    padding-top: 100px;
+    transition: all 0.2s linear;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal.active {
+    z-index: 3;
+    opacity: 1;
+}
+
+#modal_wrapper {
+    background-color: #fefefe;
+    border-radius: 0.5rem;
+    margin: auto;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #888;
+    width: 80%;
+    transform: translateY(-0.5rem);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease-in-out;
+}
+
+.modal.active #modal_wrapper {
+    transform: translateY(0.5rem);
+}
+
+.modal .modal_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal_btn--close {
+    color: #aaaaaa;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: right;
+}
+
+.modal_btn--close:hover,
+.modal_btn--close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
 }

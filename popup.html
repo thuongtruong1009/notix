@@ -39,7 +39,7 @@
                 </button>
             </div>
             <ul id="note_header">
-                <li id="settings" title="settings">
+                <li id="settings_btn" title="settings">
                     <img src="./icons/settings.png" alt="settings_icon" title="settings">
                 </li>
                 <li id="clear" title="clear">
@@ -91,28 +91,9 @@
                 <textarea id="note"></textarea>
             </div>
         </section>
-
-        <div id="note_info">
-            <p>
-                <span>Total lines:</span>
-                <span id="total_lines">0</span>
-            </p>
-            <p>
-                <span>Total words:</span>
-                <span id="total_words">0</span>
-            </p>
-            <p>
-                <span>Total size:</span>
-                <span id="total_size">0</span>
-            </p>
-            <p>
-                <span>Last update:</span>
-                <span id="last_update">0</span>
-            </p>
-        </div>
     </main>
 
-    <section id="modal">
+    <section id="settings">
         <div class="settings_header">
             <h3>Notix settings</h3>
             <button id="close_settings" type="button" title="close settings">
@@ -121,6 +102,16 @@
         </div>
         <p>this is settings</p>
     </section>
+
+    <div id="modal" class="modal">
+        <div id="modal_wrapper">
+            <div class="modal_header">
+                <h3 id="modal_title">Information</h3>
+                <span class="modal_btn--close">&times;</span>
+            </div>
+            <div id="modal_content"></div>
+        </div>
+    </div>
 
     <!-- <p><button type="button" id="start-btn">Speech to Text</button> &nbsp; <span id="action"></span></p>
         <div id="output"></div> -->
