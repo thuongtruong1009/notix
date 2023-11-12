@@ -72,8 +72,9 @@
 @keyframes firework {
     0% {
         opacity: 1;
-        box-shadow: 0 0 0 -2px #4f29f0, 0 0 0 -2px #4f29f0, 0 0 0 -2px #4f29f0,
-            0 0 0 -2px #4f29f0, 0 0 0 -2px #4f29f0, 0 0 0 -2px #4f29f0;
+        box-shadow: 0 0 0 -2px var(--indigo), 0 0 0 -2px var(--indigo),
+            0 0 0 -2px var(--indigo), 0 0 0 -2px var(--indigo),
+            0 0 0 -2px var(--indigo), 0 0 0 -2px var(--indigo);
     }
 
     30% {
@@ -82,8 +83,8 @@
 
     100% {
         opacity: 0;
-        box-shadow: 0 -15px 0 0px #4f29f0, 14px -8px 0 0px #4f29f0,
-            14px 8px 0 0px #4f29f0, 0 15px 0 0px #4f29f0,
-            -14px 8px 0 0px #4f29f0, -14px -8px 0 0px #4f29f0;
+        box-shadow: 0 -15px 0 0px var(--indigo), 14px -8px 0 0px var(--indigo),
+            14px 8px 0 0px var(--indigo), 0 15px 0 0px var(--indigo),
+            -14px 8px 0 0px var(--indigo), -14px -8px 0 0px var(--indigo);
     }
 }

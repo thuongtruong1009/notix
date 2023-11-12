@@ -1,11 +1,3 @@
-main > section {
-    width: 100%;
-    height: 100%;
-    resize: none;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
 main > #note_panel {
     font-weight: 500;
     border-radius: 0.7rem;
@@ -40,7 +32,7 @@ main > .note_head_panel > p {
     padding: 0.25rem 0.5rem;
     border-top-left-radius: 0.35rem;
     border-top-right-radius: 0.35rem;
-    background-color: var(--light_bg);
+    background-color: var(--milk_white);
     box-shadow: inset 3px 3px 4px #d1d9e6, inset -1px -1px 1px #d1d9e6;
     position: relative;
     max-width: 50%;
@@ -54,7 +46,7 @@ main > .note_head_panel > p::before {
     width: calc(100% - 0.4rem);
     height: 0.75rem;
     z-index: 2;
-    background-color: var(--light_bg);
+    background-color: var(--milk_white);
 }
 
 main > .note_head_panel #note_name {
@@ -138,7 +130,7 @@ main > #list_panel > ul > li button:after {
     top: 180%;
     width: 160%;
     height: 190%;
-    background-color: #009087;
+    background-color: var(--teal);
     border-radius: 50%;
     display: block;
     transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
@@ -147,20 +139,20 @@ main > #list_panel > ul > li button:after {
 
 main > #list_panel > ul > li:hover button {
     color: #ffffff;
-    border: 1px solid #009087;
+    border: 1px solid var(--teal);
 }
 
 main > #list_panel > ul > li.choiced button:before,
 main > #list_panel > ul > li:hover button:before {
     top: -35%;
-    background-color: #009087;
+    background-color: var(--teal);
     transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
 main > #list_panel > ul > li.choiced button:after,
 main > #list_panel > ul > li:hover button:after {
     top: -45%;
-    background-color: #009087;
+    background-color: var(--teal);
     transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 

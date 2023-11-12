@@ -32,16 +32,20 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 -   Audio reading text
 -   Auto save typed note text
 -   Not reset data when closing the browser
--   Display notes information (total notes, name - size - total words - total lines - last update time of current note, etc.)
--   Cross-browsers (Chrome, Firefox, Edge, Opera, Brave, etc.)
--   UI/UX friendly (transition button list, shadow effect, gradient title etc.)
+-   Display notes information (total notes, name - size - total words - total lines - created - last update time of current note, etc.)
+-   Cross-browsers compatible (Chrome, Firefox, Edge, Opera, Brave, etc.)
+-   UI/UX friendly (transition, shadow effect, gradient color etc.)
 
 ## 🎯 Todo
 
 -   [ ] Scroll to top button
 -   [ ] Search notes by name
+-   [ ] Filter notes by created time, last updated time, etc.
+-   [ ] Password protection for secret notes
 -   [ ] Detect language translation of note text
 -   [ ] Setting options (dark mode, font color, font size, popup size, autosave-time, transition effects, current version etc.)
+-   [ ] Export/import notes data
+-   [ ] Real-time sync notes data between tabs
 -   [ ] Insert image to text
 -   [ ] Text editor tool panel
 -   [ ] Localization

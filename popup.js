@@ -35,16 +35,6 @@ let voiceTextBtn = document.getElementById("voice_text");
 let audioTextBtn = document.getElementById("audio_text");
 let settings = document.getElementById('settings');
 
-let ICONS = {};
-let OBJ_KEYS = {};
-
-(async () => {
-    const src = chrome.runtime.getURL("./modules/scripts/variables.js");
-    const contentMain = await import(src);
-    ICONS = contentMain.ICONS;
-    OBJ_KEYS = contentMain.OBJ_KEYS;
-})();
-
 const tabListStyle = () => {
     listHeader.style.display = "flex";
     noteHeader.style.display = "none";
@@ -67,164 +57,179 @@ const tabNoteStyle = () => {
     notePanelHeader.style.display = "flex";
 }
 
-const persistCurrentTabStyle = (tab) => {
-    tab === OBJ_KEYS.NOTE ? tabNoteStyle() : tabListStyle();
-}
+(async () => {
+    const src = chrome.runtime.getURL("./modules/scripts/variables.js");
+    const contentMain = await import(src);
+    let ICONS = contentMain.ICONS;
+    let OBJ_KEYS = contentMain.OBJ_KEYS;
 
-const changeTab = (tab) => {
-    persistCurrentTabStyle(tab);
-    chrome.storage.sync.set({ tab: tab });
-}
+    let loadTab = contentMain.loadTab;
+    let dispatchTab = contentMain.dispatchTab;
 
-chrome.storage.sync.get(OBJ_KEYS.TAB, (data) => persistCurrentTabStyle(data.tab));
+    let loadNotes = contentMain.loadNotes;
+    let dispatchNotes = contentMain.dispatchNotes;
+
+    let loadCurrentNote = contentMain.loadCurrentNote;
+    let dispatchCurrentNote = contentMain.dispatchCurrentNote;
+
+    let calLastUpdate = contentMain.calLastUpdate;
+    let exportToImage = contentMain.exportToImage;
+
+    const persistCurrentTabStyle = (tab) => {
+        tab === OBJ_KEYS.NOTE ? tabNoteStyle() : tabListStyle();
+    }
+
+    const changeTab = (tab) => {
+        persistCurrentTabStyle(tab);
+        dispatchTab(tab);
+    }
+
+    loadTab((data) => persistCurrentTabStyle(data.tab));
 
 // **************** list tab ****************
 
-let notesList = [];
-let removesList = [];
+    let notesList = [];
+    let removesList = [];
 
-const dispatchNotesList = () => chrome.storage.sync.set({ items: notesList });
+    const deleteSelectedNotes = () => {
+        removesList.length > 0 ? deleteBtn.classList.remove('disabled') : deleteBtn.classList.add('disabled');
 
-const deleteSelectedNotes = () => {
-    removesList.length > 0 ? deleteBtn.classList.remove('disabled') : deleteBtn.classList.add('disabled');
-
-    deleteBtn.onclick = () => {
-        for (let currentSelect of removesList) {
-            list.removeChild(document.getElementById(currentSelect));
-            notesList = notesList.filter((currentItem) => currentItem.id !== currentSelect);
-        }
-        dispatchNotesList();
-        loadNotesList();
-    };
-}
-
-const updateNoteById = () => {
-    notesList.map((item, index) => {
-        if (item.id === currentNoteData.id) {
-            notesList[index] = currentNoteData;
-        }
-    });
-
-    dispatchNotesList();
-}
-
-const createNewNote = (id, title) => {
-    let newItem = document.createElement('li');
-    newItem.setAttribute('id', id);
-    
-    let titleBtn = document.createElement('button');
-    titleBtn.setAttribute('type', 'button');
-
-    let titleBtnSpan = document.createElement('span');
-    titleBtnSpan.classList.add('note_title');
-    titleBtnSpan.innerText = title;
-
-    titleBtnSpan.onclick = async () => {
-        let choice = await notesList.find(item => item.id === id);
-        chrome.storage.sync.set({ current_data: choice});
-        changeTab(OBJ_KEYS.NOTE);
-        loadCurrentNoteData();
-    };
-
-    titleBtn.appendChild(titleBtnSpan);
-
-    let editBtn = document.createElement('img');
-    editBtn.setAttribute('src', ICONS.EDIT_STATE);
-    editBtn.classList.add('edit_btn');
-    editBtn.setAttribute('title', 'edit');
-    titleBtn.appendChild(editBtn);
-
-    editBtn.onclick = () => {
-        titleBtn.innerHTML = "";
-        newItem.classList.add('choiced');
-
-        let titleEditInput = document.createElement('input');
-        titleEditInput.setAttribute('type', 'text');
-        titleEditInput.classList.add('note_title');
-        titleEditInput.value = title;
-        titleEditInput.setAttribute('title', 'edit');
-        titleEditInput.style.cursor = "auto";
-        titleBtn.appendChild(titleEditInput);
-        titleEditInput.focus();
-
-        let titleCancelEditBtn = document.createElement('img');
-        titleCancelEditBtn.setAttribute('src', ICONS.CANCEL_STATE);
-        titleCancelEditBtn.classList.add('cancel_btn');
-        titleCancelEditBtn.setAttribute('title', 'cancel');
-        titleBtn.appendChild(titleCancelEditBtn);
-
-        const cancelEdit = () => {
-            titleEditInput.replaceWith(titleBtnSpan);
-            titleEditDoneBtn.replaceWith(editBtn);
-            titleEditInput.remove();
-            titleEditDoneBtn.remove();
-            titleCancelEditBtn.remove();
-            newItem.classList.remove('choiced');
-        }
-
-        titleCancelEditBtn.onclick = () => {
-            cancelEdit();
-        };
-
-        let titleEditDoneBtn = document.createElement('img');
-        titleEditDoneBtn.setAttribute('src', ICONS.SAVE_STATE);
-        titleEditDoneBtn.classList.add('edit_btn');
-        titleEditDoneBtn.setAttribute('title', 'done');
-        titleBtn.appendChild(titleEditDoneBtn);
-
-        titleEditDoneBtn.onclick = async () => {
-            title = titleEditInput.value;
-            titleBtnSpan.innerText = title;
-            notesList.map((item, index) => {
-                if (item.id === id) {
-                    notesList[index].title = title;
-                }
-            });
-            await dispatchNotesList();
-            cancelEdit();
-        };
-    };
-
-    newItem.appendChild(titleBtn);
-
-    let checkboxItem = document.createElement('input');
-    checkboxItem.setAttribute('type', 'checkbox');
-    checkboxItem.classList.add('checkbox_item');
-    checkboxItem.setAttribute('id', `checkbox_item_${id}`);
-    checkboxItem.setAttribute('title', 'select');
-    newItem.appendChild(checkboxItem);
-
-    let checkboxEffect = document.createElement('label');
-    checkboxEffect.setAttribute('for', `checkbox_item_${id}`);
-    newItem.appendChild(checkboxEffect);
-
-    checkboxItem.onclick = () => {
-        if (checkboxItem.checked === true) {
-            removesList.push(id);
-        } else {
-            removesList = removesList.filter((currentItem) => currentItem !== id);
-        }
-
-        deleteSelectedNotes();
-    };
-
-    return newItem;
-}
-
-const loadNotesList = () => {
-    list.innerHTML = "";
-    chrome.storage.sync.get(OBJ_KEYS.ITEMS, (data)=> {
-        if (data.items) {
-            for (let item of data.items) {
-                list.appendChild(createNewNote(item.id, item.title));
+        deleteBtn.onclick = () => {
+            for (let currentSelect of removesList) {
+                list.removeChild(document.getElementById(currentSelect));
+                notesList = notesList.filter((currentItem) => currentItem.id !== currentSelect);
             }
-            notesList = data.items;
-            total.innerText = notesList.length;
-        }
-    });
-}
+            dispatchNotes();
+            loadNotesList();
+        };
+    }
 
-(async () => {
+    const updateNoteById = () => {
+        notesList.map((item, index) => {
+            if (item.id === currentNoteData.id) {
+                notesList[index] = currentNoteData;
+            }
+        });
+
+        dispatchNotes();
+    }
+
+    const createNewNote = (id, title) => {
+        let newItem = document.createElement('li');
+        newItem.setAttribute('id', id);
+        
+        let titleBtn = document.createElement('button');
+        titleBtn.setAttribute('type', 'button');
+
+        let titleBtnSpan = document.createElement('span');
+        titleBtnSpan.classList.add('note_title');
+        titleBtnSpan.innerText = title;
+
+        titleBtnSpan.onclick = async () => {
+            let choice = await notesList.find(item => item.id === id);
+            chrome.storage.sync.set({ current_data: choice});
+            changeTab(OBJ_KEYS.NOTE);
+            loadCurrentNote();
+        };
+
+        titleBtn.appendChild(titleBtnSpan);
+
+        let editBtn = document.createElement('img');
+        editBtn.setAttribute('src', ICONS.EDIT_STATE);
+        editBtn.classList.add('edit_btn');
+        editBtn.setAttribute('title', 'edit');
+        titleBtn.appendChild(editBtn);
+
+        editBtn.onclick = () => {
+            titleBtn.innerHTML = "";
+            newItem.classList.add('choiced');
+
+            let titleEditInput = document.createElement('input');
+            titleEditInput.setAttribute('type', 'text');
+            titleEditInput.classList.add('note_title');
+            titleEditInput.value = title;
+            titleEditInput.setAttribute('title', 'edit');
+            titleEditInput.style.cursor = "auto";
+            titleBtn.appendChild(titleEditInput);
+            titleEditInput.focus();
+
+            let titleCancelEditBtn = document.createElement('img');
+            titleCancelEditBtn.setAttribute('src', ICONS.CANCEL_STATE);
+            titleCancelEditBtn.classList.add('cancel_btn');
+            titleCancelEditBtn.setAttribute('title', 'cancel');
+            titleBtn.appendChild(titleCancelEditBtn);
+
+            const cancelEdit = () => {
+                titleEditInput.replaceWith(titleBtnSpan);
+                titleEditDoneBtn.replaceWith(editBtn);
+                titleEditInput.remove();
+                titleEditDoneBtn.remove();
+                titleCancelEditBtn.remove();
+                newItem.classList.remove('choiced');
+            }
+
+            titleCancelEditBtn.onclick = () => {
+                cancelEdit();
+            };
+
+            let titleEditDoneBtn = document.createElement('img');
+            titleEditDoneBtn.setAttribute('src', ICONS.SAVE_STATE);
+            titleEditDoneBtn.classList.add('edit_btn');
+            titleEditDoneBtn.setAttribute('title', 'done');
+            titleBtn.appendChild(titleEditDoneBtn);
+
+            titleEditDoneBtn.onclick = async () => {
+                title = titleEditInput.value;
+                titleBtnSpan.innerText = title;
+                notesList.map((item, index) => {
+                    if (item.id === id) {
+                        notesList[index].title = title;
+                    }
+                });
+                await dispatchNotes();
+                cancelEdit();
+            };
+        };
+
+        newItem.appendChild(titleBtn);
+
+        let checkboxItem = document.createElement('input');
+        checkboxItem.setAttribute('type', 'checkbox');
+        checkboxItem.classList.add('checkbox_item');
+        checkboxItem.setAttribute('id', `checkbox_item_${id}`);
+        checkboxItem.setAttribute('title', 'select');
+        newItem.appendChild(checkboxItem);
+
+        let checkboxEffect = document.createElement('label');
+        checkboxEffect.setAttribute('for', `checkbox_item_${id}`);
+        newItem.appendChild(checkboxEffect);
+
+        checkboxItem.onclick = () => {
+            if (checkboxItem.checked === true) {
+                removesList.push(id);
+            } else {
+                removesList = removesList.filter((currentItem) => currentItem !== id);
+            }
+
+            deleteSelectedNotes();
+        };
+
+        return newItem;
+    }
+
+    const loadNotesList = () => {
+        list.innerHTML = "";
+        loadNotes((data)=> {
+            if (data.items) {
+                for (let item of data.items) {
+                    list.appendChild(createNewNote(item.id, item.title));
+                }
+                notesList = data.items;
+                total.innerText = notesList.length;
+            }
+        });
+    }
+
     loadNotesList();
 
     settingsBtn.onclick = () => {
@@ -234,58 +239,46 @@ const loadNotesList = () => {
     newBtn.onclick = () => {
         let newData = {
             id: Date.now(),
-            title: Date.now(),
+            title: `New note ${Date.now()}`,
             content: "",
             lastUpdate: Date.now()
         }
         
         notesList.push(newData);
-        dispatchNotesList();
+        dispatchNotes();
     
         list.appendChild(createNewNote(newData.id, newData.title));
     };
-})();
 
 // **************** note tab ****************
 
-let currentNoteData = {
-    id: "",
-    title: "",
-    content: "",
-    lastUpdate: ""
-};
+    let currentNoteData = {
+        id: "",
+        title: "",
+        content: "",
+        lastUpdate: ""
+    };
 
-let currentExportName = "";
+    let currentExportName = "";
 
-const calLastUpdate = (timestamp) => {
-    const date = new Date(timestamp);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so add 1
-    const year = date.getFullYear();
-    const formattedDate = `${day}/${month}/${year}`;
-    if(day === NaN || month === NaN || year === NaN) return "unknown";
-    return formattedDate;
-}
+    // const persistNoteBtnStyle = {
+    //     unDone: (order) => {
+    //         images[order].src = ICONS.SAVE_STATE;
+    //         images[order].title = "save";
+    //     }
 
-// const persistNoteBtnStyle = {
-//     unDone: (order) => {
-//         images[order].src = ICONS.SAVE_STATE;
-//         images[order].title = "save";
-//     }
+        // for (let image of images) {
+        //     image.style.opacity = "1";
+        // }
+        // images[0].src = ICONS.CLEAR_STATE;
+        // images[1].src = ICONS.CAPTURE_STATE;
+        // images[2].src = ICONS.DOWNLOAD_IMG_STATE;
+        // images[3].src = ICONS.DOWNLOAD_TEXT_STATE;
+        // images[4].src = ICONS.COPY_STATE;
+        // images[5].src = ICONS.SAVE_STATE;
+    // 
 
-    // for (let image of images) {
-    //     image.style.opacity = "1";
-    // }
-    // images[0].src = ICONS.CLEAR_STATE;
-    // images[1].src = ICONS.CAPTURE_STATE;
-    // images[2].src = ICONS.DOWNLOAD_IMG_STATE;
-    // images[3].src = ICONS.DOWNLOAD_TEXT_STATE;
-    // images[4].src = ICONS.COPY_STATE;
-    // images[5].src = ICONS.SAVE_STATE;
-// }
-
-const loadCurrentNoteData = () => {
-    chrome.storage.sync.get(OBJ_KEYS.CURRENT_DATA, (data) => {
+    loadCurrentNote((data) => {
         if(data.current_data) {
             noteInput.value = data.current_data.content;
             currentNoteData = data.current_data;
@@ -293,19 +286,6 @@ const loadCurrentNoteData = () => {
             currentExportName = `notix_${data.current_data.title}`;
         }
     });
-}
-
-
-const exportToImage = (cb) => {
-    domtoimage.toPng(main).then(async(dataUrl) => {
-        cb(dataUrl);
-    }).catch((error) => { 
-        alert('oops, something went wrong!', error);
-    });
-}
-
-(() => {
-    loadCurrentNoteData();
 
     notePanel.addEventListener('load', () => {
         noteInput.scrollTop = noteInput.scrollHeight;
@@ -319,7 +299,7 @@ const exportToImage = (cb) => {
         currentNoteData.content = noteInput.value;
         currentNoteData.lastUpdate = Date.now();
     
-        chrome.storage.sync.set({ current_data: currentNoteData}, () => {
+        dispatchCurrentNote(currentNoteData, () => {
             updateNoteById();
     
             images[5].src = ICONS.DONE_STATE;
@@ -330,7 +310,6 @@ const exportToImage = (cb) => {
                 images[5].title = "save";
             }, 2000);
         });
-    
     }
     
     saveBtn.onclick = () => {
@@ -458,21 +437,12 @@ const exportToImage = (cb) => {
 
         let modalContent = document.getElementById("modal_content");
 
-        let totalLinesLi = document.createElement("li");
-        totalLinesLi.innerText = `Total lines: ${totalLines}`;
-        modalContent.appendChild(totalLinesLi);
-
-        let totalWordsLi = document.createElement("li");
-        totalWordsLi.innerText = `Total words: ${totalWords}`;
-        modalContent.appendChild(totalWordsLi);
-
-        let totalSizesLi = document.createElement("li");
-        totalSizesLi.innerText = `Total size: ${totalSizes}`;
-        modalContent.appendChild(totalSizesLi);
-
-        let lastUpdateLi = document.createElement("li");
-        lastUpdateLi.innerText = `Last update: ${lastUpdate}`;
-        modalContent.appendChild(lastUpdateLi);
+        modalContent.innerHTML = `<ul>
+            <li><span>Total lines: </span>${totalLines}</li>
+            <li><span>Total words: </span>${totalWords}</li>
+            <li><span>Total size: </span>${totalSizes}</li>
+            <li><span>Last update: </span>${lastUpdate}</li>
+        </ul>`
 
         let title = document.getElementById("modal_title");
         title.innerText = "Statistics";
