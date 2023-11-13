@@ -1,20 +1,27 @@
 <div align="center">
-  <img src="https://img.shields.io/badge/w3c-validated-brightgreen" alt="w3c_badge" />
-  <img src="https://img.shields.io/github/languages/code-size/thuongtruong1009/notix" alt="code_size_badge" />
-  <img alt="GitHub release" src="https://img.shields.io/github/v/release/thuongtruong1009/notix?color=yellow">
-  <img src="https://img.shields.io/badge/manifest-v3-pink" alt="manifest_version_badge" />
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/thuongtruong1009/notix" alt="license_badge" /></a>
-  <a href="https://hits.dwyl.com/thuongtruong1009/notix" rel="nofollow"><img src="https://hits.dwyl.com/thuongtruong1009/notix.svg" alt="HitCount" data-canonical-src="https://hits.dwyl.com/thuongtruong1009/notix.svg" style="max-width: 100%;"></a>
 
 <img src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/favicon.ico" width="28" height="28" /> $\huge\textcolor{purple}{\text{Notix}}$
 
 $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 
+  <img src="https://img.shields.io/badge/w3c-validated-brightgreen" alt="w3c_badge" />
+  <img src="https://img.shields.io/github/languages/code-size/thuongtruong1009/notix" alt="code_size_badge" />
+  <img alt="GitHub release" src="https://img.shields.io/github/v/release/thuongtruong1009/notix?color=yellow">
+  <img src="https://img.shields.io/badge/manifest-v3-pink" alt="manifest_version_badge" />
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/thuongtruong1009/notix" alt="license_badge" /></a>
+  <!-- <a href="https://hits.dwyl.com/thuongtruong1009/notix" rel="nofollow"><img src="https://hits.dwyl.com/thuongtruong1009/notix.svg" alt="HitCount" data-canonical-src="https://hits.dwyl.com/thuongtruong1009/notix.svg" style="max-width: 100%;"></a> -->
+
 </div>
 
-<div align="center">
+|                                                               |                                                               |
+| :-----------------------------------------------------------: | :-----------------------------------------------------------: |
+| <img src="public/preview1a.png" alt="preview1" width="400" /> | <img src="public/preview1b.png" alt="preview3" width="400" /> |
+| <img src="public/preview2.png" alt="preview3" width="400" />  | <img src="public/preview3.png" alt="preview4" width="400" />  |
+|                                                               |                                                               |
+
+<!-- <div align="center">
   <img src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/preview1.png" alt="preview1" width="400" /><img src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/preview2.png" alt="preview2" width="400" />
-</div>
+</div> -->
 
 ## 📢 About
 
@@ -22,7 +29,7 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 
 ## 🎉 What's new
 
-##### (Not support in <ins>http://localhost</ins> static living)
+##### _(Not support in <ins>http://localhost</ins> static living for popup)_
 
 -   Create new notes, edit note data, delete selected notes, clear text, and dispatch notes data with unlimited storage time
 -   Copy note as text, image to the clipboard
@@ -33,8 +40,12 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 -   Auto save typed note text
 -   Not reset data when closing the browser
 -   Display notes information (total notes, name - size - total words - total lines - created - last update time of current note, etc.)
--   Cross-browsers compatible (Chrome, Firefox, Edge, Opera, Brave, etc.)
+-   Cross-browsers compatibility (Chrome, Firefox, Edge, Opera, Brave, etc.)
 -   UI/UX friendly (transition, shadow effect, gradient color etc.)
+
+## 📚 Documentation
+
+-   [CHANGELOG](CHANGELOG.md)
 
 ## 🎯 Todo
 
@@ -77,4 +88,4 @@ Copyright of [@thuongtruong1009](https://github.com/thuongtruong1009), 2023
 
 ## ❤️ Support me
 
-> <a href="https://nhantien.momo.vn/0917085937"><img height="28" src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/momo.svg"></a> <a href="https://www.paypal.me/thuongtruong1009"><img height="32" src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/paypal.svg"></a> <a href='https://ko-fi.com/thuongtruong1009'><img height='26' style='border:0px;height:28px;color:blue' src='https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/kofi.svg' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> <a href="public/mb_qr.jpg"><img height="30" src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/mbbank.svg"></a>
+> <a href="https://nhantien.momo.vn/0917085937"><img height="28" src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/momo.svg"></a> <a href="https://www.paypal.me/thuongtruong1009"><img height="30" src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/paypal.svg"></a> <a href='https://ko-fi.com/thuongtruong1009'><img height='26' style='border:0px;height:28px;color:blue' src='https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/kofi.svg' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> <a href="public/mb_qr.jpg"><img height="32" src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/mbbank.svg"></a>

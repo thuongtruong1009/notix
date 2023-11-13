@@ -91,6 +91,8 @@ const tabNoteStyle = () => {
     let notesList = [];
     let removesList = [];
 
+    const dispatchNotesList = () => dispatchNotes(notesList);
+
     const deleteSelectedNotes = () => {
         removesList.length > 0 ? deleteBtn.classList.remove('disabled') : deleteBtn.classList.add('disabled');
 
@@ -99,7 +101,7 @@ const tabNoteStyle = () => {
                 list.removeChild(document.getElementById(currentSelect));
                 notesList = notesList.filter((currentItem) => currentItem.id !== currentSelect);
             }
-            dispatchNotes();
+            dispatchNotesList();
             loadNotesList();
         };
     }
@@ -111,7 +113,7 @@ const tabNoteStyle = () => {
             }
         });
 
-        dispatchNotes();
+        dispatchNotesList();
     }
 
     const createNewNote = (id, title) => {
@@ -128,8 +130,8 @@ const tabNoteStyle = () => {
         titleBtnSpan.onclick = async () => {
             let choice = await notesList.find(item => item.id === id);
             chrome.storage.sync.set({ current_data: choice});
+            loadCurrentNoteData();
             changeTab(OBJ_KEYS.NOTE);
-            loadCurrentNote();
         };
 
         titleBtn.appendChild(titleBtnSpan);
@@ -186,7 +188,7 @@ const tabNoteStyle = () => {
                         notesList[index].title = title;
                     }
                 });
-                await dispatchNotes();
+                await dispatchNotesList();
                 cancelEdit();
             };
         };
@@ -245,7 +247,7 @@ const tabNoteStyle = () => {
         }
         
         notesList.push(newData);
-        dispatchNotes();
+        dispatchNotesList();
     
         list.appendChild(createNewNote(newData.id, newData.title));
     };
@@ -278,14 +280,18 @@ const tabNoteStyle = () => {
         // images[5].src = ICONS.SAVE_STATE;
     // 
 
-    loadCurrentNote((data) => {
-        if(data.current_data) {
-            noteInput.value = data.current_data.content;
-            currentNoteData = data.current_data;
-            noteName.innerText = data.current_data.title;
-            currentExportName = `notix_${data.current_data.title}`;
-        }
-    });
+    const loadCurrentNoteData = () => { 
+        loadCurrentNote((data) => {
+            if(data.current_data) {
+                noteInput.value = data.current_data.content;
+                currentNoteData = data.current_data;
+                noteName.innerText = data.current_data.title;
+                currentExportName = `notix_${data.current_data.title}`;
+            }
+        });
+    }
+
+    loadCurrentNoteData();
 
     notePanel.addEventListener('load', () => {
         noteInput.scrollTop = noteInput.scrollHeight;
@@ -493,25 +499,39 @@ const tabNoteStyle = () => {
     };
     
     // voice recognition
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    
-    recognition.onresult = (event) => {
-        const result = event.results[event.resultIndex][0].transcript;
-        noteInput.value += result;
-    };
-    
-    recognition.onerror = (event) => {
-        alert('Speech recognition error. Please try again.', event.error);
-    };
-    
     voiceTextBtn.onclick = () => {
         var permission = navigator.permissions.query({name: 'microphone'});
         permission.then((permissionStatus) => {
             if (permissionStatus.state == "granted") {
                 navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
+                    
+                    // var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+                    // var recognition = new SpeechRecognition();
+
+                    let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+                    recognition.continuous = true;
+                    recognition.interimResults = true;
+                    
+                    recognition.onresult = (event) => {
+                        const result = event.results[event.resultIndex][0].transcript;
+                        noteInput.value += result;
+                    };
+
+                    // recognition.onresult = function(event) {
+                    //     var transcript = event.results[0][0].transcript;
+                    //     output.innerHTML = "<b>Text:</b> " + transcript;
+                    // };
+
+                    // recognition.onspeechend = function() {
+                    //     action.innerHTML = "<small>stopped listening, hope you are done...</small>";
+                    //     recognition.stop();
+                    // }
+                    
+                    recognition.onerror = (event) => {
+                        alert('Speech recognition error. Please try again.', event.error);
+                    };
+
                     recognition.start();
                     voiceTextBtn.src = ICONS.RECORDING_STATE;
                     voiceTextBtn.title = "recording";

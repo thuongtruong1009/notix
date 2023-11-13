@@ -26,7 +26,6 @@
     {
       "resources": [
         "modules/scripts/settings.js",
-        "modules/scripts/voice_to_text.js",
         "modules/scripts/variables.js",
         "modules/third-party/domtoimg.js"
       ],
