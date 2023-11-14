@@ -100,7 +100,18 @@
                 <img src="./icons/close.svg" alt="close_settings">
             </button>
         </div>
-        <p>this is settings</p>
+        <div class="settings_content">
+            <p>this is settings</p>
+            <ul>
+                <li>
+                    <span>Auto save</span>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
     </section>
 
     <div id="modal">
@@ -115,7 +126,6 @@
     </div>
         
     <script src="./popup.js"></script>
-    <script src="./modules/scripts/variables.js"></script>
     <script src="./modules/scripts/settings.js"></script>
     <script src="./modules/third-party/domtoimg.js"></script>
 </body>

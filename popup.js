@@ -57,23 +57,29 @@ const tabNoteStyle = () => {
     notePanelHeader.style.display = "flex";
 }
 
+const dynamicImport = async (path) => {
+    let src = chrome.runtime.getURL(path);
+    return await import(src);
+}
+
 (async () => {
-    const src = chrome.runtime.getURL("./modules/scripts/variables.js");
-    const contentMain = await import(src);
-    let ICONS = contentMain.ICONS;
-    let OBJ_KEYS = contentMain.OBJ_KEYS;
+    const contentVariables = await dynamicImport("./modules/scripts/constants.js");
+    let ICONS = contentVariables.ICONS;
+    let OBJ_KEYS = contentVariables.OBJ_KEYS;
 
-    let loadTab = contentMain.loadTab;
-    let dispatchTab = contentMain.dispatchTab;
+    const contentHelpers = await dynamicImport("./modules/scripts/helpers.js");
+    let calLastUpdate = contentHelpers.calLastUpdate;
+    let exportToImage = contentHelpers.exportToImage;
 
-    let loadNotes = contentMain.loadNotes;
-    let dispatchNotes = contentMain.dispatchNotes;
+    const contentStorage = await dynamicImport("./modules/scripts/storage.js");
+    let loadTab = contentStorage.loadTab;
+    let dispatchTab = contentStorage.dispatchTab;
 
-    let loadCurrentNote = contentMain.loadCurrentNote;
-    let dispatchCurrentNote = contentMain.dispatchCurrentNote;
+    let loadNotes = contentStorage.loadNotes;
+    let dispatchNotes = contentStorage.dispatchNotes;
 
-    let calLastUpdate = contentMain.calLastUpdate;
-    let exportToImage = contentMain.exportToImage;
+    let loadCurrentNote = contentStorage.loadCurrentNote;
+    let dispatchCurrentNote = contentStorage.dispatchCurrentNote;
 
     const persistCurrentTabStyle = (tab) => {
         tab === OBJ_KEYS.NOTE ? tabNoteStyle() : tabListStyle();

@@ -19,13 +19,15 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 | <img src="public/preview2.png" alt="preview3" width="400" />  | <img src="public/preview3.png" alt="preview4" width="400" />  |
 |                                                               |                                                               |
 
-<!-- <div align="center">
-  <img src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/preview1.png" alt="preview1" width="400" /><img src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/preview2.png" alt="preview2" width="400" />
-</div> -->
-
 ## 📢 About
 
 -   Notix is a simple extension that helps in saving temporary notes. It is built with HTML, CSS and JavaScript based on Chrome manifest verion 3. It is cross-browser compatible extension that means it can be used on any browser.
+
+<!-- ## 📚 Documentation
+
+## 📦 Download
+
+## 📝 Usage -->
 
 ## 🎉 What's new
 
@@ -42,10 +44,6 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 -   Display notes information (total notes, name - size - total words - total lines - created - last update time of current note, etc.)
 -   Cross-browsers compatibility (Chrome, Firefox, Edge, Opera, Brave, etc.)
 -   UI/UX friendly (transition, shadow effect, gradient color etc.)
-
-## 📚 Documentation
-
--   [CHANGELOG](CHANGELOG.md)
 
 ## 🎯 Todo
 
@@ -80,12 +78,20 @@ git clone https://github.com/thuongtruong1009/notix.git
 
 -   **On browser** -> **Settings** -> **Extensions** -> **Developer mode (open $\textcolor{blue}{\text{chrome://extensions/}}$ for chrome)** -> **Load unpacked** -> **Select the cloned folder**
 
-## 🛡️ License
+## 📄 Changelog
 
-This project is licensed under the [MIT LICENSE](LICENSE)
+-   Track experience at [Changelog](https://thuongtruong1009.github.io/notix/changelog.html)
+
+## 🛡️ Credits
+
+This project is licensed under the [GNU General Public v3.0](LICENSE)
 
 Copyright of [@thuongtruong1009](https://github.com/thuongtruong1009), 2023
 
 ## ❤️ Support me
 
 > <a href="https://nhantien.momo.vn/0917085937"><img height="28" src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/momo.svg"></a> <a href="https://www.paypal.me/thuongtruong1009"><img height="30" src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/paypal.svg"></a> <a href='https://ko-fi.com/thuongtruong1009'><img height='26' style='border:0px;height:28px;color:blue' src='https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/kofi.svg' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> <a href="public/mb_qr.jpg"><img height="32" src="https://raw.githubusercontent.com/thuongtruong1009/notix/main/public/mbbank.svg"></a>
+
+## 📧 Contact
+
+-   Email: [thuongtruongofficial](mailto:thuongtruongofficial)
