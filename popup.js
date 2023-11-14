@@ -1,39 +1,39 @@
-let logo = document.getElementById("logo");
-let homeBtn = document.querySelector('#home');
+let logo = document.getElementById("logo"),
+    homeBtn = document.querySelector('#home'),
 
-let main = document.querySelector("main");
-let header = document.querySelector("main > header");
+    main = document.querySelector("main"),
+    header = document.querySelector("main > header"),
 
-let noteHeader = document.querySelector("#note_header");
-let listHeader = document.querySelector("#list_header");
+    noteHeader = document.querySelector("#note_header"),
+    listHeader = document.querySelector("#list_header"),
 
-let noteName = document.querySelector("#note_name");
-let total = document.querySelector("#total");
+    noteName = document.querySelector("#note_name"),
+    total = document.querySelector("#total"),
 
-let listPanel = document.querySelector("#list_panel");
-let notePanel = document.querySelector("#note_panel");
-let notePanelHeader = document.querySelector(".note_head_panel");
+    listPanel = document.querySelector("#list_panel"),
+    notePanel = document.querySelector("#note_panel"),
+    notePanelHeader = document.querySelector(".note_head_panel"),
 
-let list = document.querySelector('#list_panel > ul');
-let listItem = document.querySelector('#list_panel > ul > li');
-let deleteBtn = document.querySelector('#list_header > #delete_btn');
-let newBtn = document.querySelector('#list_header > #new_btn');
+    list = document.querySelector('#list_panel > ul'),
+    listItem = document.querySelector('#list_panel > ul > li'),
+    deleteBtn = document.querySelector('#list_header > #delete_btn'),
+    newBtn = document.querySelector('#list_header > #new_btn'),
 
-let noteInput = document.getElementById("note");
-let settingsBtn = document.getElementById('settings_btn');
-let clearBtn = document.getElementById("clear");
-let copyLinkBtn = document.getElementById("copy_link");
-let captureBtn = document.getElementById("capture");
-let downloadImageBtn = document.getElementById("download_img");
-let downloadTextBtn = document.getElementById("download_text");
-let copyTextBtn = document.getElementById("copy_text");
-let saveBtn = document.getElementById("save");
-let images = document.querySelectorAll("#note_header > li > img");
+    noteInput = document.getElementById("note"),
+    settingsBtn = document.getElementById('settings_btn'),
+    clearBtn = document.getElementById("clear"),
+    copyLinkBtn = document.getElementById("copy_link"),
+    captureBtn = document.getElementById("capture"),
+    downloadImageBtn = document.getElementById("download_img"),
+    downloadTextBtn = document.getElementById("download_text"),
+    copyTextBtn = document.getElementById("copy_text"),
+    saveBtn = document.getElementById("save"),
+    images = document.querySelectorAll("#note_header > li > img"),
 
-let noteInformation = document.getElementById("note_information");
-let voiceTextBtn = document.getElementById("voice_text");
-let audioTextBtn = document.getElementById("audio_text");
-let settings = document.getElementById('settings');
+    noteInformation = document.getElementById("note_information"),
+    voiceTextBtn = document.getElementById("voice_text"),
+    audioTextBtn = document.getElementById("audio_text"),
+    settings = document.getElementById('settings');
 
 const tabListStyle = () => {
     listHeader.style.display = "flex";
@@ -154,6 +154,8 @@ const dynamicImport = async (path) => {
 
             let titleEditInput = document.createElement('input');
             titleEditInput.setAttribute('type', 'text');
+            titleEditInput.setAttribute('maxlength', '50');
+            titleEditInput.setAttribute('required', 'true');
             titleEditInput.classList.add('note_title');
             titleEditInput.value = title;
             titleEditInput.setAttribute('title', 'edit');

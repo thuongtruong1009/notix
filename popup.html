@@ -95,20 +95,44 @@
 
     <section id="settings">
         <div class="settings_header">
-            <h3>Notix settings</h3>
+            <h2>Notix settings</h2>
             <button id="close_settings" type="button" title="close settings">
                 <img src="./icons/close.svg" alt="close_settings">
             </button>
         </div>
         <div class="settings_content">
-            <p>this is settings</p>
             <ul>
                 <li>
                     <span>Auto save</span>
                     <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider round"></span>
+                        <input id="autosave_setting_toggle" type="checkbox" checked>
+                        <span class="slider"></span>
                     </label>
+                </li>
+                <li>
+                    <span>Auto sync tabs</span>
+                    <label class="switch">
+                        <input id="autosync_setting_toggle" type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+            <ul>
+                <li class="audio_options">
+                    <span>Choose a voice</span>
+                    <select id="voice"></select>
+                </li>
+                <li>
+                    <span>Audio volumn</span>
+                    <input id="audio_setting_volumn" type="range" min="0.1" max="1" step="0.1" value="1" />
+                </li>
+                <li>
+                    <span>Audio pitch</span>
+                    <input id="audio_setting_pitch" type="range" min="0.1" max="2" step="0.1" value="1" />
+                </li>
+                <li>
+                    <span>Audio rate</span>
+                    <input id="audio_setting_rate" type="range" min="0.1" max="10" step="0.1" value="1" />
                 </li>
             </ul>
         </div>
