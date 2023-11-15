@@ -4,9 +4,10 @@
 
 ### Added
 
--   Executing background script after install extension
--   Home page
+-   Executing background script after install/uninstall extension
+-   Home page - uninstall page
 -   [Changelog page](https://github.com/thuongtruong1009/notix/pull/8/commits/42ccf10b432a71c7402be690e6d716a587788995)
+-   [Setting panel](https://github.com/thuongtruong1009/notix/pull/8/commits/e677accd9fdc8e442901fb4b20825eb81d387048)
 
 ### Features
 
@@ -16,7 +17,7 @@
 -   [Display current note's information modal(name - size - total words - total lines - created - last update time of current note, etc.)](https://github.com/thuongtruong1009/notix/pull/6/commits/4da47045274e9a480dd71d465c15a5c1b9efc448)
 -   [Voice speech recognition](https://github.com/thuongtruong1009/notix/pull/6/commits/b492783b4b293257de9b5692f4cc6ad90ae3a03a)
 -   Audio reading
--   Configurable setting options
+-   Configurable setting options (auto-save, auto-sync, audio-options)
 
 ### Changed
 

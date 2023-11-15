@@ -63,10 +63,10 @@ const dynamicImport = async (path) => {
 }
 
 (async () => {
-    const contentVariables = await dynamicImport("./modules/scripts/constants.js");
+    const contentVariables = await dynamicImport("./modules/scripts/variables.js");
     let ICONS = contentVariables.ICONS;
     let OBJ_KEYS = contentVariables.OBJ_KEYS;
-
+    
     const contentHelpers = await dynamicImport("./modules/scripts/helpers.js");
     let calLastUpdate = contentHelpers.calLastUpdate;
     let exportToImage = contentHelpers.exportToImage;
@@ -80,6 +80,9 @@ const dynamicImport = async (path) => {
 
     let loadCurrentNote = contentStorage.loadCurrentNote;
     let dispatchCurrentNote = contentStorage.dispatchCurrentNote;
+
+    let loadAutoSettings = contentStorage.loadAutoSettings;
+    let loadAudioSettings = contentStorage.loadAudioSettings;
 
     const persistCurrentTabStyle = (tab) => {
         tab === OBJ_KEYS.NOTE ? tabNoteStyle() : tabListStyle();
@@ -242,10 +245,6 @@ const dynamicImport = async (path) => {
 
     loadNotesList();
 
-    settingsBtn.onclick = () => {
-        settings.classList.add(OBJ_KEYS.ACTIVE_CLASS);
-    };
-
     newBtn.onclick = () => {
         let newData = {
             id: Date.now(),
@@ -309,6 +308,10 @@ const dynamicImport = async (path) => {
         changeTab(OBJ_KEYS.LIST);
     };
 
+    settingsBtn.onclick = () => {
+        settings.classList.add(OBJ_KEYS.ACTIVE_CLASS);
+    };
+
     const saveData = () => {
         currentNoteData.content = noteInput.value;
         currentNoteData.lastUpdate = Date.now();
@@ -329,11 +332,28 @@ const dynamicImport = async (path) => {
     saveBtn.onclick = () => {
         saveData();
     };
-    
-    noteInput.addEventListener('input', () => {
-        setTimeout(() => {
-            saveData();
-        }, 1000)
+
+    let isAutoSave = true;
+
+    const autoSave = async () => {
+        await loadAutoSettings((data) => {
+            if (data.auto_settings) {
+                isAutoSave = data.auto_settings.autoSave;
+            }
+        });
+    }
+
+    autoSave();
+
+    noteInput.addEventListener('input', async () => {
+        await autoSave();
+        if(isAutoSave) {
+            setTimeout(() => {
+                saveData();
+            }, 1000) 
+        } else {
+            return false;
+        }
     });
     
     clearBtn.onclick = () => {
@@ -480,6 +500,23 @@ const dynamicImport = async (path) => {
     let isAudioReading = false;
     let msg = new SpeechSynthesisUtterance();
 
+    let audioSettings = {
+        voice: "0",
+        vol: "1",
+        pitch: "1",
+        rate: "1",
+    };
+
+    const loadAudioSettingsData = async () => {
+        await loadAudioSettings((data) => {
+            if (data.audio_settings) {
+                audioSettings = data.audio_settings;
+            }
+        });
+    }
+
+    loadAudioSettingsData();
+
     const turnOffAudio = () => {
         speechSynthesis.cancel();
         isAudioReading = false;
@@ -492,17 +529,18 @@ const dynamicImport = async (path) => {
             isAudioReading = true;
             audioTextBtn.src = ICONS.AUDIO_STATE;
             audioTextBtn.title = "audio text";
-            msg.voice = speechSynthesis.getVoices()[0];
+            msg.voice = speechSynthesis.getVoices()[audioSettings.voice];
             msg.text = noteInput.value;
-            msg.volume = +1;
-            msg.pitch = +1;
-            msg.rate = +1;
+            msg.volume = audioSettings.vol;
+            msg.pitch = audioSettings.pitch;
+            msg.rate = audioSettings.rate;
             speechSynthesis.speak(msg);
             return false;
         }
     }
     
-    audioTextBtn.onclick =  () => {
+    audioTextBtn.onclick = async () => {
+        await loadAudioSettingsData();
         isAudioReading ? turnOffAudio() : turnOnAudio();
     };
     

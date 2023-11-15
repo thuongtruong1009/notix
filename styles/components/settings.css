@@ -21,6 +21,11 @@
     align-items: center;
 }
 
+#settings sub {
+    text-align: center;
+    display: block;
+}
+
 .settings_content {
     display: grid;
     grid-template-columns: 0.7fr 1.3fr;

@@ -18,9 +18,10 @@ export const ICONS = {
 export const OBJ_KEYS = {
     NOTE: "note",
     LIST: "list",
-    SETTINGS: "settings",
     TAB: "tab",
     ITEMS: "items",
     CURRENT_DATA: "current_data",
-    ACTIVE_CLASS: "active"
+    ACTIVE_CLASS: "active",
+    AUTO_SETTINGS: "auto_settings",
+    AUDIO_SETTINGS: "audio_settings"
 };
