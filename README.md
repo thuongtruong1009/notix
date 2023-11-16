@@ -9,7 +9,7 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
   <img alt="GitHub release" src="https://img.shields.io/github/v/release/thuongtruong1009/notix?color=yellow">
   <img src="https://img.shields.io/badge/manifest-v3-pink" alt="manifest_version_badge" />
   <a href="LICENSE"><img src="https://img.shields.io/github/license/thuongtruong1009/notix" alt="license_badge" /></a>
-  <!-- <a href="https://hits.dwyl.com/thuongtruong1009/notix" rel="nofollow"><img src="https://hits.dwyl.com/thuongtruong1009/notix.svg" alt="HitCount" data-canonical-src="https://hits.dwyl.com/thuongtruong1009/notix.svg" style="max-width: 100%;"></a> -->
+  <a href="https://hits.dwyl.com/thuongtruong1009/notix" rel="nofollow"><img src="https://hits.dwyl.com/thuongtruong1009/notix.svg" alt="HitCount" data-canonical-src="https://hits.dwyl.com/thuongtruong1009/notix.svg" style="max-width: 100%;"></a>
 
 </div>
 
@@ -17,6 +17,7 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | <img src="public/preview1.png" alt="preview1" width="400" /> | <img src="public/preview2.png" alt="preview2" width="400" /> |
 | <img src="public/preview3.png" alt="preview3" width="400" /> | <img src="public/preview4.png" alt="preview4" width="400" /> |
+| <img src="public/preview5.png" alt="preview5" width="400" /> | <img src="public/preview6.png" alt="preview6" width="400" /> |
 |                                                              |                                                              |
 
 ## 📢 About
@@ -45,11 +46,11 @@ $\small\textcolor{purple}{\textit{Saving temporary notes extension}}$
 -   Cross-browsers compatibility (Chrome, Firefox, Edge, Opera, Brave, etc.)
 -   UI/UX friendly (transition, shadow effect, gradient color etc.)
 -   Setting options (dark mode, fonts, auto-save, auto-sync, audio-options etc.)
+-   Search notes by name
 
 ## 🎯 Todo
 
 -   [ ] Scroll to top button
--   [ ] Search notes by name
 -   [ ] Filter notes by created time, last updated time, etc.
 -   [ ] Password protection for secret notes
 -   [ ] Detect language translation of note text

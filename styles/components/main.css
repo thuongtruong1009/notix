@@ -78,6 +78,10 @@ main > #list_panel > ul {
     height: fit-content !important;
 }
 
+main > #list_panel > ul.inactive {
+    display: none;
+}
+
 main > #list_panel > ul > li {
     height: fit-content;
     position: relative;
@@ -271,6 +275,36 @@ main > #list_panel > ul > li .checkbox_item:checked + label {
 
 main > #list_panel > ul > li .checkbox_item:checked + label::after {
     animation: firework 0.5s ease forwards 0.1s;
+}
+
+main #list_panel figure {
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.7;
+    margin: auto;
+}
+
+main #list_panel .empty_img.active,
+main #list_panel .not_found_img.active {
+    display: flex;
+}
+
+main #list_panel figure figcaption {
+    margin-top: 1rem;
+}
+
+main #list_panel figure figcaption #new_area_line {
+    color: purple;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+main #list_panel figure figcaption #new_area_line:hover {
+    color: #a800ff;
 }
 
 main #note_control {

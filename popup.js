@@ -13,11 +13,18 @@ let logo = document.getElementById("logo"),
     listPanel = document.querySelector("#list_panel"),
     notePanel = document.querySelector("#note_panel"),
     notePanelHeader = document.querySelector(".note_head_panel"),
+    searchPanel = document.querySelector("#search_panel"),
+    emptyImage = document.querySelector("#list_panel .empty_img"),
+    notFoundImage = document.querySelector("#list_panel .not_found_img"),
+    newAreaLine = document.querySelector("#list_panel .empty_img #new_area_line"),
 
     list = document.querySelector('#list_panel > ul'),
     listItem = document.querySelector('#list_panel > ul > li'),
     deleteBtn = document.querySelector('#list_header > #delete_btn'),
     newBtn = document.querySelector('#list_header > #new_btn'),
+    searchBtn = document.querySelector('#list_header > #search_btn'),
+    searchInput = document.querySelector('#list_header > #search_panel > #search_input'),
+    searchCloseBtn = document.querySelector('#list_header > #search_panel > #search_close_btn'),
 
     noteInput = document.getElementById("note"),
     settingsBtn = document.getElementById('settings_btn'),
@@ -101,6 +108,21 @@ const dynamicImport = async (path) => {
     let removesList = [];
 
     const dispatchNotesList = () => dispatchNotes(notesList);
+
+    const listApperanceStyle = () => {
+        if (notesList.length > 0) {
+            emptyImage.classList.remove(OBJ_KEYS.ACTIVE_CLASS);
+            list.classList.remove("inactive");
+            deleteBtn.style.display = "flex";
+            searchBtn.style.display = "flex";
+        } 
+        else {
+            emptyImage.classList.add(OBJ_KEYS.ACTIVE_CLASS);
+            list.classList.add("inactive");
+            deleteBtn.style.display = "none";
+            searchBtn.style.display = "none";
+        }
+    }
 
     const deleteSelectedNotes = () => {
         removesList.length > 0 ? deleteBtn.classList.remove('disabled') : deleteBtn.classList.add('disabled');
@@ -227,25 +249,29 @@ const dynamicImport = async (path) => {
             deleteSelectedNotes();
         };
 
+        listApperanceStyle();
+
         return newItem;
     }
 
-    const loadNotesList = () => {
+    const loadNotesList = async () => {
         list.innerHTML = "";
-        loadNotes((data)=> {
+        await loadNotes((data)=> {
             if (data.items) {
                 for (let item of data.items) {
                     list.appendChild(createNewNote(item.id, item.title));
                 }
                 notesList = data.items;
                 total.innerText = notesList.length;
+
             }
+            listApperanceStyle();
         });
     }
-
+    
     loadNotesList();
 
-    newBtn.onclick = () => {
+    const createNew = () => {
         let newData = {
             id: Date.now(),
             title: `New note ${Date.now()}`,
@@ -257,7 +283,45 @@ const dynamicImport = async (path) => {
         dispatchNotesList();
     
         list.appendChild(createNewNote(newData.id, newData.title));
+    }
+
+    newBtn.onclick = () => {
+        createNew();
     };
+
+    newAreaLine.onclick = () => {
+        createNew();
+    };
+
+    searchBtn.onclick = () => {
+        searchPanel.classList.add(OBJ_KEYS.ACTIVE_CLASS);
+        searchInput.focus();
+
+        searchCloseBtn.onclick = () => {
+            searchInput.value = "";
+            searchPanel.classList.remove(OBJ_KEYS.ACTIVE_CLASS);
+            loadNotesList();
+            notFoundImage.classList.remove(OBJ_KEYS.ACTIVE_CLASS);
+        };
+
+        searchInput.oninput = () => {
+            let searchValue = searchInput.value.toLowerCase();
+            let searchList = notesList.filter((item) => item.title.toLowerCase().includes(searchValue));
+            list.innerHTML = "";
+
+            for (let item of searchList) {
+                list.appendChild(createNewNote(item.id, item.title));
+            }
+
+            if(searchList.length === 0) {
+                notFoundImage.classList.add(OBJ_KEYS.ACTIVE_CLASS);
+                list.classList.add("inactive");
+            } else {
+                notFoundImage.classList.remove(OBJ_KEYS.ACTIVE_CLASS);
+                list.classList.remove("inactive");
+            }
+        }
+    }
 
 // **************** note tab ****************
 
@@ -345,7 +409,7 @@ const dynamicImport = async (path) => {
 
     autoSave();
 
-    noteInput.addEventListener('input', async () => {
+    noteInput.oninput = async () => {
         await autoSave();
         if(isAutoSave) {
             setTimeout(() => {
@@ -354,7 +418,7 @@ const dynamicImport = async (path) => {
         } else {
             return false;
         }
-    });
+    };
     
     clearBtn.onclick = () => {
         chrome.storage.sync.remove(OBJ_KEYS.CURRENT_DATA, () => {

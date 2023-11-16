@@ -37,6 +37,10 @@
                     <img src="./icons/search.svg" alt="search_icon" title="search">
                     <h5>Search</h5>
                 </button>
+                <div id="search_panel">
+                    <input id="search_input" type="search" placeholder="Search..." maxlength="50" required title="search">
+                    <button id="search_close_btn" type="button" title="close">Close</button>
+                </div>
             </div>
             <ul id="note_header">
                 <li id="settings_btn" title="settings">
@@ -68,6 +72,14 @@
 
         <section id="list_panel">
             <ul></ul>
+            <figure class="empty_img">
+                <img src="./icons/empty.png" alt="empty_icon">
+                <figcaption>Empty notes here. <span id="new_area_line">Create new now!</span></figcaption>
+            </figure>
+            <figure class="not_found_img">
+                <img src="./icons/not_found.png" alt="not_found_icon">
+                <figcaption>Not found</figcaption>
+            </figure>
         </section>
 
         <div class="note_head_panel">
