@@ -37,6 +37,10 @@
                     <img src="./icons/search.svg" alt="search_icon" title="search">
                     <h5>Search</h5>
                 </button>
+                <div id="search_panel">
+                    <input id="search_input" type="search" placeholder="Search..." maxlength="50" required title="search">
+                    <button id="search_close_btn" type="button" title="close">Close</button>
+                </div>
             </div>
             <ul id="note_header">
                 <li id="settings_btn" title="settings">
@@ -68,6 +72,14 @@
 
         <section id="list_panel">
             <ul></ul>
+            <figure class="empty_img">
+                <img src="./icons/empty.png" alt="empty_icon">
+                <figcaption>Empty notes here. <span id="new_area_line">Create new now!</span></figcaption>
+            </figure>
+            <figure class="not_found_img">
+                <img src="./icons/not_found.png" alt="not_found_icon">
+                <figcaption>Not found</figcaption>
+            </figure>
         </section>
 
         <div class="note_head_panel">
@@ -95,31 +107,64 @@
 
     <section id="settings">
         <div class="settings_header">
-            <h3>Notix settings</h3>
+            <h2>Notix settings</h2>
             <button id="close_settings" type="button" title="close settings">
                 <img src="./icons/close.svg" alt="close_settings">
             </button>
         </div>
-        <p>this is settings</p>
+        <div class="settings_content">
+            <ul>
+                <li>
+                    <span>Auto save</span>
+                    <label class="switch">
+                        <input id="autosave_setting_toggle" type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li>
+                    <span>Auto sync tabs</span>
+                    <label class="switch">
+                        <input id="autosync_setting_toggle" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+            <ul>
+                <li class="audio_options">
+                    <span>Choose a voice</span>
+                    <select id="voice"></select>
+                </li>
+                <li>
+                    <span>Audio volumn</span>
+                    <input id="audio_setting_volumn" type="range" min="0.1" max="1" step="0.1" value="1" />
+                </li>
+                <li>
+                    <span>Audio pitch</span>
+                    <input id="audio_setting_pitch" type="range" min="0.1" max="2" step="0.1" value="1" />
+                </li>
+                <li>
+                    <span>Audio rate</span>
+                    <input id="audio_setting_rate" type="range" min="0.1" max="10" step="0.1" value="1" />
+                </li>
+            </ul>
+        </div>
+        <sub>(Re-open popup to get changes 🥰)</sub>
     </section>
 
-    <div id="modal" class="modal">
+    <div id="modal">
         <div id="modal_wrapper">
             <div class="modal_header">
                 <h3 id="modal_title">Information</h3>
                 <span class="modal_btn--close">&times;</span>
             </div>
+            <span></span>
             <div id="modal_content"></div>
         </div>
     </div>
-
-    <!-- <p><button type="button" id="start-btn">Speech to Text</button> &nbsp; <span id="action"></span></p>
-        <div id="output"></div> -->
         
     <script src="./popup.js"></script>
-    <script src="./scripts/settings.js"></script>
-    <script src="./scripts/voice_to_text.js"></script>
-    <script src="./scripts/domtoimg.js"></script>
+    <script src="./modules/scripts/settings.js"></script>
+    <script src="./modules/third-party/domtoimg.js"></script>
 </body>
 
 </html>

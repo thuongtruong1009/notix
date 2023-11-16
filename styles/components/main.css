@@ -1,0 +1,322 @@
+main > #note_panel {
+    font-weight: 500;
+    border-radius: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9,
+        9px 9px 16px rgba(189, 189, 189, 0.6),
+        -9px -9px 16px rgba(255, 255, 255, 0.5);
+}
+
+main > #note_panel:hover {
+    box-shadow: inset 4px 4px 4px #d1d9e6, inset -4px -4px 4px #f9f9f9,
+        9px 9px 16px rgba(189, 189, 189, 0.6),
+        -9px -9px 16px rgba(255, 255, 255, 0.5);
+}
+
+main > .note_head_panel {
+    transform: translateY(0.2rem);
+    margin-top: 0.5rem;
+    z-index: 1;
+    width: 100%;
+    height: auto;
+    justify-content: space-between;
+    align-items: end;
+    padding-left: 2rem;
+    padding-right: 0.5rem;
+}
+
+main > .note_head_panel > p {
+    padding: 0.25rem 0.5rem;
+    border-top-left-radius: 0.35rem;
+    border-top-right-radius: 0.35rem;
+    background-color: var(--milk_white);
+    box-shadow: inset 3px 3px 4px #d1d9e6, inset -1px -1px 1px #d1d9e6;
+    position: relative;
+    max-width: 50%;
+}
+
+main > .note_head_panel > p::before {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 0.25rem;
+    width: calc(100% - 0.4rem);
+    height: 0.75rem;
+    z-index: 2;
+    background-color: var(--milk_white);
+}
+
+main > .note_head_panel #note_name {
+    width: fit-content;
+    max-width: 100%;
+}
+
+main > #note_panel > div {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border: 0.25rem solid transparent;
+}
+
+main > #note_panel > div > textarea,
+main > #list_panel > ul {
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem;
+    line-height: 1.5em;
+    background: transparent;
+}
+
+main > #list_panel > ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 0.65rem;
+    padding: 1rem 0.5rem 0 0.5rem;
+    height: fit-content !important;
+}
+
+main > #list_panel > ul.inactive {
+    display: none;
+}
+
+main > #list_panel > ul > li {
+    height: fit-content;
+    position: relative;
+    min-width: 100%;
+}
+
+/* item buttons */
+
+main > #list_panel > ul > li button {
+    text-align: left;
+    border-radius: 0.25rem;
+    border: 1px solid #e8e8e8;
+    padding: 0.5rem;
+    cursor: default;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    z-index: 1;
+    color: #090909;
+    font-size: 1.1em;
+    background: #e8e8e8;
+    box-shadow: 2px 2px 5px #c5c5c5, -2px -2px 5px #ffffff;
+}
+
+main > #list_panel > ul > li button:before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) scaleY(1) scaleX(1.25);
+    top: 100%;
+    width: 140%;
+    height: 180%;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    display: block;
+    transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+    z-index: -1;
+}
+
+main > #list_panel > ul > li button:after {
+    content: '';
+    position: absolute;
+    left: 55%;
+    transform: translateX(-50%) scaleY(1) scaleX(1.45);
+    top: 180%;
+    width: 160%;
+    height: 190%;
+    background-color: var(--teal);
+    border-radius: 50%;
+    display: block;
+    transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+    z-index: -1;
+}
+
+main > #list_panel > ul > li:hover button {
+    color: #ffffff;
+    border: 1px solid var(--teal);
+}
+
+main > #list_panel > ul > li.choiced button:before,
+main > #list_panel > ul > li:hover button:before {
+    top: -35%;
+    background-color: var(--teal);
+    transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+main > #list_panel > ul > li.choiced button:after,
+main > #list_panel > ul > li:hover button:after {
+    top: -45%;
+    background-color: var(--teal);
+    transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+main .note_head_panel #note_name,
+main > #list_panel > ul > li button .note_title,
+main > #list_panel > ul > li button input[type='text'] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+main > #list_panel > ul > li button input[type='text'] {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background: #fafafa;
+    padding: 2.5px;
+    font-size: 0.9em;
+}
+
+/* edit button */
+main > #list_panel > ul > li button .cancel_btn,
+main > #list_panel > ul > li button .edit_btn {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    background-color: #fafafa;
+    border: 1px solid #cacece;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
+        inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 2px;
+    border-radius: 3px;
+    transform: scale(0);
+    transition: all 0.2s ease-in-out;
+}
+
+main > #list_panel > ul > li.choiced button .cancel_btn,
+main > #list_panel > ul > li:hover button .cancel_btn,
+main > #list_panel > ul > li.choiced button .edit_btn,
+main > #list_panel > ul > li:hover button .edit_btn {
+    transform: scale(1);
+}
+
+main > #list_panel > ul > li button .cancel_btn {
+    margin: 0 0.2rem;
+}
+
+/* checkbox input */
+
+main > #list_panel > ul > li .checkbox_item {
+    position: absolute;
+    top: -0.25rem;
+    left: -0.25rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    z-index: 2;
+    -webkit-appearance: none;
+    background-color: #fafafa;
+    border: 1px solid #cacece;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
+        inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 2px;
+    border-radius: 3px;
+    display: none;
+    cursor: pointer;
+}
+
+main > #list_panel > ul > li:hover .checkbox_item {
+    display: block;
+}
+
+main > #list_panel > ul > li .checkbox_item:active,
+main > #list_panel > ul > li .checkbox_item:checked:active {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
+        inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+main > #list_panel > ul > li .checkbox_item:checked {
+    background-color: #e9ecee;
+    border: 1px solid #adb8c0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
+        inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05),
+        inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+    color: #99a1a7;
+    display: block;
+}
+
+main > #list_panel > ul > li .checkbox_item:checked:after {
+    content: '\2714';
+    font-size: 13px;
+    position: absolute;
+    top: -0.25rem;
+    left: 0rem;
+    color: #959ca2;
+}
+
+/* checkbox effect */
+
+main > #list_panel > ul > li label::after {
+    content: '';
+    position: absolute;
+    height: 4px;
+    width: 4px;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    z-index: 2;
+    cursor: none;
+    pointer-events: none;
+}
+
+main > #list_panel > ul > li .checkbox_item:checked + label {
+    color: #c3c8de;
+    animation: move 0.3s ease 0.1s forwards;
+}
+
+main > #list_panel > ul > li .checkbox_item:checked + label::after {
+    animation: firework 0.5s ease forwards 0.1s;
+}
+
+main #list_panel figure {
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.7;
+    margin: auto;
+}
+
+main #list_panel .empty_img.active,
+main #list_panel .not_found_img.active {
+    display: flex;
+}
+
+main #list_panel figure figcaption {
+    margin-top: 1rem;
+}
+
+main #list_panel figure figcaption #new_area_line {
+    color: purple;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+main #list_panel figure figcaption #new_area_line:hover {
+    color: #a800ff;
+}
+
+main #note_control {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 2rem;
+}
+
+main #note_control li {
+    margin-left: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
