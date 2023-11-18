@@ -383,12 +383,12 @@ const dynamicImport = async (path) => {
         dispatchCurrentNote(currentNoteData, () => {
             updateNoteById();
     
-            images[5].src = ICONS.DONE_STATE;
-            images[5].title = "saved";
+            images[7].src = ICONS.DONE_STATE;
+            images[7].title = "saved";
     
             setTimeout(() => {
-                images[5].src = ICONS.SAVE_STATE;
-                images[5].title = "save";
+                images[7].src = ICONS.SAVE_STATE;
+                images[7].title = "save";
             }, 2000);
         });
     }
@@ -426,7 +426,7 @@ const dynamicImport = async (path) => {
             currentNoteData.content = "";
             currentNoteData.lastUpdate = Date.now();
             updateNoteById();
-            images[0].src = ICONS.DONE_STATE;
+            images[1].src = ICONS.DONE_STATE;
         });
     };
     
@@ -441,15 +441,15 @@ const dynamicImport = async (path) => {
         element.click();
     
         document.body.removeChild(element);
-        images[3].src = ICONS.DONE_STATE;
-        images[3].title = "downloaded text";
+        images[5].src = ICONS.DONE_STATE;
+        images[5].title = "downloaded text";
     };
     
     copyTextBtn.onclick = () => {
         let note = noteInput.value;
         navigator.clipboard.writeText(note).then(() => {
-            images[4].src = ICONS.DONE_STATE;
-            images[5].title = "copied text";
+            images[6].src = ICONS.DONE_STATE;
+            images[6].title = "copied text";
         }, () => {
             alert("Error when copying to clipboard");
         });
@@ -501,8 +501,8 @@ const dynamicImport = async (path) => {
     
             header.style.display = "flex";
             notePanelHeader.style.display = "flex";
-            images[1].src = ICONS.DONE_STATE;
-            images[1].title = "copied screenshot capture";
+            images[3].src = ICONS.DONE_STATE;
+            images[3].title = "copied screenshot capture";
         });
     };
     
@@ -521,8 +521,8 @@ const dynamicImport = async (path) => {
     
             header.style.display = "flex";
             notePanelHeader.style.display = "flex";
-            images[2].src = ICONS.DONE_STATE;
-            images[2].title = "downloaded image";
+            images[4].src = ICONS.DONE_STATE;
+            images[4].title = "downloaded image";
         });
     };
 
